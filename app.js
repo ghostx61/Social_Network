@@ -25,11 +25,11 @@ app.use(require("express-session")({
     saveUninitialized: false
 }));
 
-// app.use(passport.initialize());
-// app.use(passport.session());
-
-// passport.serializeUser(User.serializeUser());
-// passport.deserializeUser(User.deserializeUser());
+app.use(passport.initialize());
+app.use(passport.session());
+passport.use(new localStrategy(User.authenticate()));
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
 
 
 // //create new user
@@ -99,22 +99,37 @@ app.get("/signup", function(req, res){
     res.render("signup");
 });
 
+//login
+app.get("/login", function(req, res){
+    res.render("login");
+});
+
 app.get("/secret", function(req, res){
     res.render("secret");
 });
 
 app.post("/signup", function(req, res){
-    var user =req.body.user;
-    var password =req.body.password;
-    User.register(user, password, function(err, user){
+    var user ={
+        name: req.body.name,
+        email: req.body.email,
+        username: req.body.username
+    }
+    User.register(user, req.body.password, function(err, user){
         if(err){
             console.log(err);
             return res.redirect("/signup");
         }
         passport.authenticate("local")(req, res, function(){
-            res.redirect("/secret")
+        res.redirect("/secret");
         });
     });
+});
+
+app.post("/login", passport.authenticate("local", {
+    successRedirect: "/secret",
+    failureRedirect: "/login"
+}), function(req, res){
+
 });
 
 
