@@ -5,7 +5,7 @@ var mongoose =require("mongoose");
 var Post = require("./models/post");
 var Image = require("./models/image");
 var User = require("./models/user");
-
+//check
 
 app.set("view engine", "ejs");
 
