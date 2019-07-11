@@ -104,10 +104,11 @@ app.get("/login", function(req, res){
     res.render("login");
 });
 
-app.get("/secret", function(req, res){
+app.get("/secret", isLoggedIn, function(req, res){
     res.render("secret");
 });
 
+//user signup
 app.post("/signup", function(req, res){
     var user ={
         name: req.body.name,
@@ -125,6 +126,7 @@ app.post("/signup", function(req, res){
     });
 });
 
+//user login
 app.post("/login", passport.authenticate("local", {
     successRedirect: "/secret",
     failureRedirect: "/login"
@@ -132,8 +134,20 @@ app.post("/login", passport.authenticate("local", {
 
 });
 
-
+//user logout
+app.get("/logout", function(req, res){
+    req.logout();
+    res.redirect("/secret");
+});
 
 app.listen(3000, function(){
     console.log("Server running on port 3000");
 });
+
+//middleware
+function isLoggedIn(req, res, next){
+    if(req.isAuthenticated()){
+        return next();
+    }
+    res.redirect("/login");
+}
