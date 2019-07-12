@@ -1,0 +1,32 @@
+<h1><em><%=currentUser.name %></em></h1>
+<h2>add a new POST</h2>
+<form action="/post" method="POST">
+        <input type="text" name="content" placeholder="New post">
+        <button>Submit</button>
+</form>
+
+<h2>add a new IMAGE</h2>
+<form action="/image" method="POST">
+        <input type="text" name="title" placeholder="title">
+        <input type="text" name="imageURL" placeholder="Image">
+        <button>Submit</button>
+</form>
+<a href="/logout">Logout</a>
+
+<% var i =currentUser.posts.length-1; %> 
+<% var j =currentUser.images.length-1; %>
+<% for(let time of postTime){ %>
+        <% if(time==currentUser.posts[i].createdAt.getTime()){ %>
+                <p>
+                <%= currentUser.posts[i].content %>  <i><%=currentUser.posts[i].createdAt %></i>
+                </p>
+                <% i--; %>
+        <%} else{ %>
+                <p>
+                <%= currentUser.images[j].title %>  <i><%=currentUser.images[j].createdAt %></i>
+                </p>
+                <img src="<%= currentUser.images[j].imageURL %>" height="400" width="400">
+                <% j--; %>
+        <%} %>
+        <hr>
+<%} %>

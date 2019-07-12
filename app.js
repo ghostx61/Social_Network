@@ -121,14 +121,14 @@ app.post("/signup", function(req, res){
             return res.redirect("/signup");
         }
         passport.authenticate("local")(req, res, function(){
-        res.redirect("/secret");
+        res.redirect("/profile");
         });
     });
 });
 
 //user login
 app.post("/login", passport.authenticate("local", {
-    successRedirect: "/secret",
+    successRedirect: "/profile",
     failureRedirect: "/login"
 }), function(req, res){
 
@@ -138,6 +138,74 @@ app.post("/login", passport.authenticate("local", {
 app.get("/logout", function(req, res){
     req.logout();
     res.redirect("/secret");
+});
+
+//user posts
+app.get("/profile", isLoggedIn, function(req, res){
+    User.findOne({username: req.user.username}).populate("posts").populate("images").exec(
+        function(err, currentUser){
+            if(err){
+                console.log(err);
+            }else{
+                var postTime = [];
+                for(let i=currentUser.posts.length-1; i>=0; i--){
+                    postTime.push(currentUser.posts[i].createdAt.getTime());
+                }
+                for(let i=currentUser.images.length-1; i>=0; i--){
+                    postTime.push(currentUser.images[i].createdAt.getTime());
+                }
+                postTime.sort(function(a, b) {
+                    return b - a;
+                });
+                console.log(postTime);
+                res.render("profile" , {currentUser: currentUser, postTime: postTime});
+            }
+        }
+    );
+});
+
+//add new post (post route)
+app.post("/post", function(req, res){
+    var currentUser = req.user;
+    var author ={
+        id: req.user._id,
+        username: req.user.username
+    }
+    Post.create({content: req.body.content, author: author}, function(err, post){
+        currentUser.posts.push(post);
+        currentUser.save(function(err, data){
+            if(err){
+                console.log(err);
+            }else{
+                console.log(data);
+                res.redirect("/profile");
+            }
+        })
+    });
+});
+
+//add new image (post route)
+app.post("/image", function(req, res){
+    var currentUser =req.user;
+    var author = {
+        id: req.user._id,
+        username: req.user.username
+    }
+    Image.create({
+        title: req.body.title,
+        imageURL: req.body.imageURL,
+        author: author
+    }, function(err, image){
+        currentUser.images.push(image);
+        currentUser.save(function(err, data){
+            if(err){
+                console.log(err);
+            }else{
+                console.log(data);
+                res.redirect("/profile");
+            }
+        })
+    })
 });
 
 app.listen(3000, function(){
