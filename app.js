@@ -8,6 +8,8 @@ var passportLocalMongoose = require("passport-local-mongoose");
 var Post = require("./models/post");
 var User = require("./models/user");
 
+app.use(express.static(__dirname +"/public"));
+
 
 app.set("view engine", "ejs");
 
@@ -173,6 +175,41 @@ app.post("/post", function(req, res){
                 res.redirect("/profile");
             }
         })
+    })
+});
+
+app.get("/findUsers", isLoggedIn, function(req, res){
+    User.find({}, function(err, allusers){
+        if(err){
+            console.log(err);
+        }else{
+            res.render("users", {allusers: allusers, currentUser: req.user});
+        }
+    });
+});
+
+app.post("/follow/:id", function(req, res){
+    req.user.follow.push(req.params.id);
+    req.user.save(function(err){
+        if(err){
+            console.log(err);
+        }else{
+            res.redirect("/findUsers");
+        }
+    })
+});
+
+app.post("/unfollow/:id", function(req, res){
+    var unfollowedUserId = req.params.id;
+    var currentUserIdArray = req.user.follow;
+    var index=currentUserIdArray.indexOf(unfollowedUserId);
+    req.user.follow.splice(index,1);
+    req.user.save(function(err){
+        if(err){
+            console.log(err);
+        }else{
+            res.redirect("/findUsers");
+        }
     })
 });
 

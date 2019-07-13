@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Social media</title>    
+        <link rel="stylesheet" type="text/css" href="/stylesheets/main.css">   
+    </head>  
+    <body>  
+        <h1>Users</h1>
+        
+        <%for(let user of allusers){ %>
+            <%if(user.username!==currentUser.username){  %>
+                <li>
+                    <%= user.name %> 
+                    <%for(let user_id of currentUser.follow){  %>
+                        
+                        <%var follow = false; %>
+                        <%if(user_id==user._id){ %>
+                           <%follow=true; %>
+                           <%break;%>
+                        <%} %>
+                    <%} %>
+                    <%if(follow){ %>
+                        <form action="/unfollow/<%=user._id%>" method="POST">
+                             <button>Unfollow</button>
+                        </form>
+                        
+                    <%}else{%>
+                        <form action="/follow/<%=user._id%>" method="POST">
+                             <button class="followBtn">Follow</button>
+                        </form>
+                    <%}%>
+                    
+                </li>
+            <%}%>
+        <%}%>
+        
+    </body>     
+</html>
+
+
