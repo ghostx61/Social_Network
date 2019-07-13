@@ -10,12 +10,6 @@ var UserSchema = new mongoose.Schema({
             type: mongoose.Schema.Types.ObjectId,
             ref: "Post"
         }
-    ],
-    images:[
-        {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: "Image"   
-        }
     ]
 });
 UserSchema.plugin(passportLocalMongoose);

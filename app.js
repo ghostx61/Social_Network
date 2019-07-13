@@ -6,7 +6,6 @@ var localStrategy = require("passport-local");
 var passportLocalMongoose = require("passport-local-mongoose");
 
 var Post = require("./models/post");
-var Image = require("./models/image");
 var User = require("./models/user");
 
 
@@ -15,7 +14,7 @@ app.set("view engine", "ejs");
 var bodyParser = require("body-parser");
 app.use(bodyParser.urlencoded({extended: true}));
 
-mongoose.connect("mongodb://localhost:27017/mongoDemo_v6");
+mongoose.connect("mongodb://localhost:27017/mongoDemo_v7");
 
 
 //passport config
@@ -147,18 +146,7 @@ app.get("/profile", isLoggedIn, function(req, res){
             if(err){
                 console.log(err);
             }else{
-                var postTime = [];
-                for(let i=currentUser.posts.length-1; i>=0; i--){
-                    postTime.push(currentUser.posts[i].createdAt.getTime());
-                }
-                for(let i=currentUser.images.length-1; i>=0; i--){
-                    postTime.push(currentUser.images[i].createdAt.getTime());
-                }
-                postTime.sort(function(a, b) {
-                    return b - a;
-                });
-                console.log(postTime);
-                res.render("profile" , {currentUser: currentUser, postTime: postTime});
+                res.render("profile" , {currentUser: currentUser});
             }
         }
     );
@@ -166,37 +154,17 @@ app.get("/profile", isLoggedIn, function(req, res){
 
 //add new post (post route)
 app.post("/post", function(req, res){
-    var currentUser = req.user;
-    var author ={
-        id: req.user._id,
-        username: req.user.username
-    }
-    Post.create({content: req.body.content, author: author}, function(err, post){
-        currentUser.posts.push(post);
-        currentUser.save(function(err, data){
-            if(err){
-                console.log(err);
-            }else{
-                console.log(data);
-                res.redirect("/profile");
-            }
-        })
-    });
-});
-
-//add new image (post route)
-app.post("/image", function(req, res){
     var currentUser =req.user;
     var author = {
         id: req.user._id,
         username: req.user.username
     }
-    Image.create({
-        title: req.body.title,
-        imageURL: req.body.imageURL,
+    Post.create({
+        text: req.body.text,
+        image: req.body.image,
         author: author
-    }, function(err, image){
-        currentUser.images.push(image);
+    }, function(err, post){
+        currentUser.posts.push(post);
         currentUser.save(function(err, data){
             if(err){
                 console.log(err);

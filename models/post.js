@@ -1,7 +1,8 @@
 var mongoose =require("mongoose");
 
 var PostSchema = new mongoose.Schema({
-    content: String,
+    text: String,
+    image: String,
     author:{
         id:{
             type: mongoose.Schema.Types.ObjectId,
