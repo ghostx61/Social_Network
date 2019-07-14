@@ -1,1 +1,8 @@
-<h1>Index Page</h1>
+<h1>Following Users posts</h1>
+
+<%for(let post of posts){ %>
+    <p> <strong><%=post.author.username %></strong> </p>
+    <p><%= post.text %>    <%= post.createdAt %></p>         
+    <p><img src="<%= post.image %>" ></p>
+    <hr>
+<%} %>

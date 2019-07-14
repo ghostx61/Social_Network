@@ -91,8 +91,19 @@ passport.deserializeUser(User.deserializeUser());
 //ROUTES
 //======
 
-app.get("/", function(req, res){
-    res.render("index");
+app.get("/", isLoggedIn, function(req, res){
+    var currentUser =req.user;
+    //console.log(currentUser.follow);
+    User.find({_id:{$in: currentUser.follow}}).populate("posts").exec(function(err, users){
+        var postArray=[];
+        for(let user of users){
+            postArray= postArray.concat(user.posts);
+        }
+        postArray.sort(function(a, b){
+            return b.createdAt.getTime() - a.createdAt.getTime();
+          });
+        res.render("index", {posts: postArray});
+    });
 });
 
 //signup
@@ -143,7 +154,7 @@ app.get("/logout", function(req, res){
 
 //user posts
 app.get("/profile", isLoggedIn, function(req, res){
-    User.findOne({username: req.user.username}).populate("posts").populate("images").exec(
+    User.findOne({username: req.user.username}).populate("posts").exec(
         function(err, currentUser){
             if(err){
                 console.log(err);
@@ -153,6 +164,7 @@ app.get("/profile", isLoggedIn, function(req, res){
         }
     );
 });
+
 
 //add new post (post route)
 app.post("/post", function(req, res){
@@ -189,7 +201,7 @@ app.get("/findUsers", isLoggedIn, function(req, res){
 });
 
 app.post("/follow/:id", function(req, res){
-    req.user.follow.push(req.params.id);
+    req.user.follow.push(mongoose.Types.ObjectId(req.params.id));
     req.user.save(function(err){
         if(err){
             console.log(err);
