@@ -1,8 +1,35 @@
-<h1>Following Users posts</h1>
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Social media</title>  
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">  
+        <link rel="stylesheet" type="text/css" href="/stylesheets/main.css">   
+    </head>  
+    <body>
+    </body>
+</html>  
 
-<%for(let post of posts){ %>
-    <p> <strong><%=post.author.username %></strong> </p>
-    <p><%= post.text %>    <%= post.createdAt %></p>         
-    <p><img src="<%= post.image %>" ></p>
-    <hr>
-<%} %>
+<div class="container" id="homePageContainer">
+    
+    <h1>Following Users posts</h1>
+    <br>
+    <%for(let post of posts){ %>
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title"><%=post.author.username %></h5>
+                <p class="card-text"><%= post.text %></p>
+                
+            </div>
+            <%if(post.image!==""){ %>
+                <img src="<%= post.image %>" class="card-img-top" alt="...">
+            <%} %>
+            <div class="card-body">
+                <a href="#" class="btn btn-primary">Like</a>
+                <p> <%=post.createdAt.getDate() %></p>
+            </div>
+        </div>
+        <br>
+    <%} %>
+</div>
+
+
