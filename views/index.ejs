@@ -3,33 +3,50 @@
     <head>
         <title>Social media</title>  
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">  
-        <link rel="stylesheet" type="text/css" href="/stylesheets/main.css">   
+        <link rel="stylesheet" type="text/css" href="/stylesheets/main.css"> 
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js">
+        </script>
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
+        <script src="/scripts/index.js"></script>
     </head>  
     <body>
+
+        <div class="container" id="homePageContainer">
+            
+            <h1>Following Users posts</h1>
+            <br>
+            <%for(let post of posts){ %>
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title"><%=post.author.username %></h5>
+                        <p class="card-text"><%= post.text %></p>
+                        
+                    </div>
+                    <%if(post.image!==""){ %>
+                        <img src="<%= post.image %>" class="card-img-top" alt="...">
+                    <%} %>
+                    <div class="card-body">
+                       <% var status=false;   %>
+                       <% for(let l of post.likes){   %>
+                          <%  if(l==userId){  %>
+                              <%  status=true;  %>
+                              <%  break; %>
+                           <% } %>
+                       <% }  %>
+                      <%  if(status){  %>
+                            <a href="/post/<%= post._id%>/unlike" class="likeBtn"><i class="fas fa-heart fa-2x"></i></a>
+                            <a href="#"><i class="far fa-comment-alt fa-2x"></i></a>
+                            <p class="count"><span><%= post.likes.length %></span> likes</p>
+                      <%  }else{  %>
+                            <a href="/post/<%= post._id%>/like" class="likeBtn"><i class="far fa-heart fa-2x"></i></a>
+                            <a href="#"><i class="far fa-comment-alt fa-2x"></i></a>
+                            <p class="count"><span><%= post.likes.length %></span> likes</p>
+                      <%  } %>
+                    </div>   
+                </div>
+                <br>
+            <%} %>
+        </div>
     </body>
 </html>  
-
-<div class="container" id="homePageContainer">
-    
-    <h1>Following Users posts</h1>
-    <br>
-    <%for(let post of posts){ %>
-        <div class="card">
-            <div class="card-body">
-                <h5 class="card-title"><%=post.author.username %></h5>
-                <p class="card-text"><%= post.text %></p>
-                
-            </div>
-            <%if(post.image!==""){ %>
-                <img src="<%= post.image %>" class="card-img-top" alt="...">
-            <%} %>
-            <div class="card-body">
-                <a href="#" class="btn btn-primary">Like</a>
-                <p> <%=post.createdAt.getDate() %></p>
-            </div>
-        </div>
-        <br>
-    <%} %>
-</div>
-
 

@@ -13,6 +13,14 @@ app.use(express.static(__dirname +"/public"));
 
 app.set("view engine", "ejs");
 
+//for jquery
+var jsdom = require("jsdom");
+const { JSDOM } = jsdom;
+const { window } = new JSDOM();
+const { document } = (new JSDOM('')).window;
+global.document = document;
+var $ = require("jquery")(window);
+
 var bodyParser = require("body-parser");
 app.use(bodyParser.urlencoded({extended: true}));
 
@@ -102,7 +110,7 @@ app.get("/", isLoggedIn, function(req, res){
         postArray.sort(function(a, b){
             return b.createdAt.getTime() - a.createdAt.getTime();
           });
-        res.render("index", {posts: postArray});
+        res.render("index", {posts: postArray, userId: currentUser._id});
     });
 });
 
@@ -223,6 +231,45 @@ app.post("/unfollow/:id", function(req, res){
             res.redirect("/findUsers");
         }
     })
+});
+
+//like button
+app.get("/post/:postId/like", function(req, res){
+    console.log("like route");
+    Post.findById(req.params.postId, function(err,foundPost){
+        if(err){
+            console.log(err);
+        }else{
+            foundPost.likes.push(req.user._id);
+            foundPost.save(function(err, post){
+                if(err){
+                    console.log(err);
+                }else{
+                    res.send({postID: post._id});
+                }
+            });
+        }
+    });
+});
+
+app.get("/post/:postId/unlike", function(req, res){
+    console.log("unlike route");
+    Post.findById(req.params.postId, function(err,foundPost){
+        if(err){
+            console.log(err);
+        }else{
+            var index = foundPost.likes.indexOf(req.user._id);
+            foundPost.likes.splice(index,1);
+            foundPost.save(function(err){
+                if(err){
+                    console.log(err);
+                }else{
+                    console.log("postid", foundPost._id);
+                    res.send({postID: foundPost._id});
+                }
+            });  
+        }
+    });
 });
 
 app.listen(3000, function(){

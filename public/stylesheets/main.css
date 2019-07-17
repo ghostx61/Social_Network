@@ -1,5 +1,5 @@
 .followBtn{
-    background: blue;
+    color: #3185F6;
 }
 
 #homePageContainer{
@@ -8,4 +8,14 @@
 
 .card-body{
     padding-top: 8px;
+}
+
+.fas.fa-heart{
+    color: #fb3958;
+}
+.far.fa-heart{
+    color: #262626;
+}
+.fa-comment-alt{
+    color: #262626;
 }
