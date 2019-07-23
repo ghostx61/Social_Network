@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Social media</title>  
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">  
+        <link rel="stylesheet" type="text/css" href="/stylesheets/main.css"> 
+    </head>  
+    <body>
+        <div class="container">
+            <%if(post.image!=""){ %>
+
+                <div class="row mx-auto">
+                    <div class="col-md padr">
+                        <img src="<%= post.image %>" class="img-thumbnail img-fluid float-right" id="showPostImg">
+                    </div>
+                    <div class="col-md padl">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title"><%= post.author.username %></h5>
+                                <h6 class="text-muted">
+                                        300 likes   20 Comments 
+                                        <span class="float-right">3 HOURS AGO</span>  
+                                </h6>
+                                <hr>
+                                <% for(let c of post.comments){  %>
+                                    <p class="postCommentsFont">
+                                        <strong>
+                                            <%=c.author.username%>
+                                        </strong> <%=c.text %> 
+                                    </p>
+                                    <p class="text-muted postCommentsFont">1 hour ago</p>
+                                    <hr>
+                                <% } %>
+                                <form action="/post/<%= post._id %>/comment" method="POST">
+                                    <div class="row">
+                                        <div class="col-10">
+                                            <input type="text" name="comment[text]" placeholder="Add a comment" class="form-control">
+                                        </div>
+                                        <div class="col-2">
+                                            <button type="submit" class="btn btn-dark">Post</button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            
+            <% }else{ %>
+                <div class="card mx-auto" id="postComment">
+                    <div class="card-body">
+                        <h5 class="card-title"><%= post.author.username %></h5>
+                        <p class="card-text"> <%= post.text %> </p> 
+                        <h6 class="text-muted">
+                            300 likes   20 Comments 
+                            <span class="float-right">3 HOURS AGO</span>  
+                        </h6>
+                    </div>
+                    <ul class="list-group list-group-flush">
+                        <div class="list-group-item">
+                            <% for(let c of post.comments){  %>
+                                <p class="postCommentsFont">
+                                    <strong><%=c.author.username%></strong> <%=c.text%> 
+                                </p>
+                                <p class="text-muted postCommentsFont">1 hour ago</p>
+                                <hr>
+                            <% } %>
+
+                            <form action="/post/<%= post._id %>/comment" method="POST">
+                                <div class="row">
+                                    <div class="col-10">
+                                        <input type="text" name="comment[text]" placeholder="Add a comment" class="form-control">
+                                    </div>
+                                    <div class="col-2">
+                                        <button type="submit" class="btn btn-dark">Post</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </ul> 
+                </div>
+
+            <%}%>
+        </div>
+    </body>
+</html>

@@ -19,3 +19,24 @@
 .fa-comment-alt{
     color: #262626;
 }
+
+#showPostImg{
+    min-height: 500px;
+    min-width: 300px;
+    border: 0;
+    max-height:700px;
+}
+.padr{
+    padding-right: 0;
+}
+.padl{
+    padding-left: 0;
+}
+
+#postComment{
+    max-width:700px;
+}
+
+.postCommentsFont{
+    font-size: 13px;
+}

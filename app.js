@@ -5,8 +5,10 @@ var passport =require("passport");
 var localStrategy = require("passport-local");
 var passportLocalMongoose = require("passport-local-mongoose");
 
+var Comment=require("./models/comment");
 var Post = require("./models/post");
 var User = require("./models/user");
+
 
 app.use(express.static(__dirname +"/public"));
 
@@ -271,6 +273,41 @@ app.get("/post/:postId/unlike", function(req, res){
         }
     });
 });
+
+app.get("/post/:postId/comments", function(req, res){
+    Post.findById(req.params.postId).populate('comments').exec(function(err, newPost){
+        if(err){
+            console.log(err);
+        }else{
+            console.log(newPost);
+            res.render("comment", {post: newPost});
+        }
+    });
+}); 
+
+app.post("/post/:postId/comment", function(req, res){
+    Post.findById(req.params.postId, function(err, post){
+        if(err){
+            console.log(err);
+        }else{
+            Comment.create(req.body.comment, function(err, comment){
+                if(err){
+                    console.log(err);
+                }else{
+                    comment.author.id = req.user._id;
+                    comment.author.username = req.user.username;
+                    comment.save();
+                    post.comments.push(comment);
+                    post.save();
+                    console.log(post);
+                    res.redirect("/post/"+post._id+"/comments"); 
+                }
+            });  
+        }
+         
+    });
+});
+
 
 app.listen(3000, function(){
     console.log("Server running on port 3000");
