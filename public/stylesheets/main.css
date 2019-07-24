@@ -40,3 +40,15 @@
 .postCommentsFont{
     font-size: 13px;
 }
+
+.containerProfile{
+    max-width:1000px;
+}
+
+.profilePic{
+    max-height: 260px;
+}
+
+.txtPadding{
+    margin-bottom: 0.45rem;
+}

@@ -1,17 +1,91 @@
-<h1><em><%=currentUser.name %></em></h1>
-<h2>add a new POST</h2>
-<form action="/post" method="POST">
-        <input type="text" name="text" placeholder="New post">
-        <input type="text" name="image" placeholder="Image">
-        <button>Submit</button>
-</form>
-
-
-<a href="/logout">Logout</a>
-
-<% for(let i=currentUser.posts.length-1; i>=0; i--){ %>
-        
-        <p><%= currentUser.posts[i].text %>                 <%= currentUser.posts[i].createdAt %></p>                     
-        <p><img src="<%= currentUser.posts[i].image %>" ></p>
-        <hr>
-<%}%>
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Social media</title>  
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">  
+        <link rel="stylesheet" type="text/css" href="/stylesheets/main.css"> 
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js">
+        </script>
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
+        <script src="/scripts/index.js"></script>
+    </head>  
+    <body>
+<div class="container containerProfile">
+        <div class="card">
+                <div class="card-body">
+                        <div class="row">
+                                <div class="col-3">
+                                       
+                                        <img src="https://content-static.upwork.com/uploads/2014/10/01073427/profilephoto1.jpg" alt="..." class="img-thumbnail img-fluid profilePic">
+                                </div>
+                                <div class="col-9">
+                                        <button class="btn btn-primary float-right">Follow</button>
+                                        <h4 class="card-title">Gaurav Chaudhary</h4>
+                                        <h5 class="card-subtitle mb-2 text-muted">TechnicalGuruji</h5>
+                                        <p class="card-text txtPadding">Engineer by Education, Entrepreneur by Profession, Nano-Science Researcher by Interest, YouTuber by Passion... (link: http://youtube.com/TechnicalGuruji) youtube.com/TechnicalGuruji Your Daily Tech Dose!!</p>
+                                        <p class="card-text text-muted txtPadding">
+                                                <i class="fas fa-map-marker-alt"></i> Address
+                                        </p>
+                                        <p class="card-text text-muted txtPadding">
+                                                <i class="fas fa-birthday-cake"></i> DOB
+                                        </p>
+                                        <p class="card-text text-muted txtPadding">
+                                                <i class="far fa-envelope"></i> Email
+                                        </p>
+                                        <p>
+                                                <strong>205</strong> Following <strong>55</strong> Followers
+                                                <button class="btn btn-info float-right">Update Profile</button>
+                                        </p>
+                                        
+                                </div>
+                        </div> 
+                </div>
+        </div>
+        <div class="container" id="homePageContainer">
+                <div class="card">
+                        <div class="card-body">
+                                <div class="card-title">
+                                        Create Post
+                                </div>
+                                <form action="/post" method="POST">
+                                        <textarea name="text" rows="5" class="form-control"> Write sometihng .....</textarea>
+                                        <input type="text" name="image" placeholder="Image" class="form-control">
+                                        <button class="btn btn-primary">Post</button>
+                                </form>
+                        </div>
+                </div>
+                <h1>Following Users posts</h1>
+                <br>
+                <% for(let i=currentUser.posts.length-1; i>=0; i--){ %>
+                        <div class="card">
+                        <div class="card-body">
+                                <h5 class="card-title"><%=currentUser.posts[i].author.username %></h5>
+                                <p class="card-text"><%= currentUser.posts[i].text %></p>
+                                
+                        </div>
+                        <%if(currentUser.posts[i].image!==""){ %>
+                                <img src="<%= currentUser.posts[i].image %>" class="card-img-top" alt="...">
+                        <%} %>
+                        <div class="card-body">
+                                <% var status=false;   %>
+                                <% for(let l of currentUser.posts[i].likes){   %>
+                                <%  if(l==userId){  %>
+                                        <%  status=true;  %>
+                                        <%  break; %>
+                                <% } %>
+                                <% }  %>
+                                <%  if(status){  %>
+                                <a href="/post/<%= currentUser.posts[i]._id%>/unlike" class="likeBtn"><i class="fas fa-heart fa-2x"></i></a>
+                                <a href="/post/<%= currentUser.posts[i]._id%>/comments"><i class="far fa-comment-alt fa-2x"></i></a>
+                                <p class="count"><span><%= currentUser.posts[i].likes.length %></span> likes</p>
+                                <%  }else{  %>
+                                <a href="/post/<%= currentUser.posts[i]._id%>/like" class="likeBtn"><i class="far fa-heart fa-2x"></i></a>
+                                <a href="/post/<%= currentUser.posts[i]._id%>/comments"><i class="far fa-comment-alt fa-2x"></i></a>
+                                <p class="count"><span><%= currentUser.posts[i].likes.length %></span> likes</p>
+                                <%  } %>
+                        </div>   
+                        </div>
+                        <br>
+                <%} %>
+        </div>
+</div>
