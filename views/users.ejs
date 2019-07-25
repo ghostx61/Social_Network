@@ -10,7 +10,7 @@
         <%for(let user of allusers){ %>
             <%if(user.username!==currentUser.username){  %>
                 <li>
-                    <%= user.name %> 
+                    <%= user.fname %> <%= user.lname %> 
                     <%for(let user_id of currentUser.follow){  %>
                         
                         <%var follow = false; %>

@@ -52,3 +52,17 @@
 .txtPadding{
     margin-bottom: 0.45rem;
 }
+
+h5 a{
+    color:black;
+}
+
+h5 a:hover{
+    text-decoration: none;
+    color: lightslategray;
+}
+
+.rounded-circle{
+    max-width:3.5rem;
+    border: 0;
+}

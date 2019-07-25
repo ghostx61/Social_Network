@@ -4,6 +4,7 @@ var mongoose =require("mongoose");
 var passport =require("passport");
 var localStrategy = require("passport-local");
 var passportLocalMongoose = require("passport-local-mongoose");
+var methodOverride =require("method-override");
 
 var Comment=require("./models/comment");
 var Post = require("./models/post");
@@ -11,7 +12,8 @@ var User = require("./models/user");
 
 
 app.use(express.static(__dirname +"/public"));
-
+app.use(methodOverride("_method"));
+app.locals.moment = require('moment');
 
 app.set("view engine", "ejs");
 
@@ -41,60 +43,6 @@ app.use(passport.session());
 passport.use(new localStrategy(User.authenticate()));
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
-
-
-// //create new user
-// User.create({
-//     name: "ninad",
-//     username: "ghostx61",
-//     email: "abc@gmail.com",
-//     password: "pass"
-// }, function(err, user){
-//     console.log(user);
-// });
-
-// //create new post and associate to user
-// User.findOne({name: "ninad"}, function(err, foundUser){
-//     const id = foundUser._id;
-//     const username = foundUser.username;
-//     var author ={id: id, username: username};
-//     Post.create({content: "Your Status Tomorrow", author:author}, function(err, post){
-//     User.findOne({name: "ninad"}, function(err, foundUser){
-//         foundUser.posts.push(post);
-//         foundUser.save(function(err, data){
-//             console.log(data);
-//         })
-//     });
-// });
-// });
-
-// //create new image and associate to user
-// User.findOne({name: "ninad"}, function(err, foundUser){
-//     const id = foundUser._id;
-//     const username = foundUser.username;
-//     var author ={id: id, username: username};
-//     Image.create({
-//         title: "New Image no. 2", 
-//         imageURL:"https://www.google.com/url?sa=i&source=images&cd=&ved=2ahUKEwj_zvTA26zjAhUEfSsKHchqDjwQjRx6BAgBEAU&url=https%3A%2F%2Fwww.pexels.com%2Fsearch%2Fbeauty%2F&psig=AOvVaw20L1-Wis0S1SfrMa5urNX1&ust=1562929294093295",
-//          author:author
-//         }, function(err, image){
-//     User.findOne({name: "ninad"}, function(err, foundUser){
-//         foundUser.images.push(image);
-//         foundUser.save(function(err, data){
-//             console.log(data);
-//         })
-//     });
-// });
-// });
-
-// //Show user 
-// User.findOne({name: "ninad"}).populate("posts").populate("images").exec(function(err, user){
-//     console.log(user); 
-// });
-
-
-
-
 
 
 //======
@@ -133,7 +81,8 @@ app.get("/secret", isLoggedIn, function(req, res){
 //user signup
 app.post("/signup", function(req, res){
     var user ={
-        name: req.body.name,
+        fname: req.body.fname,
+        lname: req.body.lname,
         email: req.body.email,
         username: req.body.username
     }
@@ -143,14 +92,14 @@ app.post("/signup", function(req, res){
             return res.redirect("/signup");
         }
         passport.authenticate("local")(req, res, function(){
-        res.redirect("/profile");
+        res.redirect("/profile/"+user.username);
         });
     });
 });
 
 //user login
 app.post("/login", passport.authenticate("local", {
-    successRedirect: "/profile",
+    successRedirect: "/",
     failureRedirect: "/login"
 }), function(req, res){
 
@@ -163,13 +112,18 @@ app.get("/logout", function(req, res){
 });
 
 //user posts
-app.get("/profile", isLoggedIn, function(req, res){
-    User.findOne({username: req.user.username}).populate("posts").exec(
-        function(err, currentUser){
-            if(err){
+app.get("/profile/:username", isLoggedIn, function(req, res){
+    User.findOne({username: req.params.username}).populate("posts").exec(
+        function(err, foundUser){
+            if(err && foundUser){
                 console.log(err);
             }else{
-                res.render("profile" , {currentUser: currentUser});
+                var status=false;
+                for(let follow of req.user.follow){ 
+                    if(follow == foundUser._id)
+                        status=true;
+                }
+                res.render("profile" , {User: foundUser, userId: req.user._id, following:status});
             }
         }
     );
@@ -216,7 +170,7 @@ app.post("/follow/:id", function(req, res){
         if(err){
             console.log(err);
         }else{
-            res.redirect("/findUsers");
+            res.redirect("back");
         }
     })
 });
@@ -230,7 +184,7 @@ app.post("/unfollow/:id", function(req, res){
         if(err){
             console.log(err);
         }else{
-            res.redirect("/findUsers");
+            res.redirect("back");
         }
     })
 });
@@ -305,6 +259,29 @@ app.post("/post/:postId/comment", function(req, res){
             });  
         }
          
+    });
+});
+
+app.get("/profile/:username/edit", function(req, res){
+    User.findOne({username: req.params.username}, function(err, user){
+        if(err){
+            console.log(err);
+        }else{
+            res.render("profileEdit", {user: user});
+        }
+    });
+});
+
+app.put("/profile/:username", function(req, res){
+    console.log(req.body.user);
+    User.findOneAndUpdate({username: req.params.username}, req.body.user, 
+        function(err, newUser){
+            if(err){
+                console.log(err);
+            }else{
+                console.log(newUser);
+                res.redirect("/profile/"+req.params.username);
+            }
     });
 });
 

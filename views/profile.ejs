@@ -19,22 +19,37 @@
                                         <img src="https://content-static.upwork.com/uploads/2014/10/01073427/profilephoto1.jpg" alt="..." class="img-thumbnail img-fluid profilePic">
                                 </div>
                                 <div class="col-9">
-                                        <button class="btn btn-primary float-right">Follow</button>
-                                        <h4 class="card-title">Gaurav Chaudhary</h4>
-                                        <h5 class="card-subtitle mb-2 text-muted">TechnicalGuruji</h5>
+                                        <% if(!(User._id.equals(userId))){ %>
+                                                <%if(following){ %>
+                                                        <form action="/unfollow/<%=User._id%>" method="POST">
+                                                                <button class="btn btn-primary float-right">Following</button>
+                                                        </form>
+                                                <% }else{ %>
+                                                        <form action="/follow/<%=User._id%>" method="POST">
+                                                                <button class="btn btn-outline-primary float-right">Follow</button>
+                                                        </form>  
+                                                <% } %>     
+                                        <% } %>
+                                        <h4 class="card-title"><%= User.fname%> <%= User.lname%></h4>
+                                        <h5 class="card-subtitle mb-2 text-muted">
+                                                <%= User.username%>
+                                        </h5>
                                         <p class="card-text txtPadding">Engineer by Education, Entrepreneur by Profession, Nano-Science Researcher by Interest, YouTuber by Passion... (link: http://youtube.com/TechnicalGuruji) youtube.com/TechnicalGuruji Your Daily Tech Dose!!</p>
                                         <p class="card-text text-muted txtPadding">
-                                                <i class="fas fa-map-marker-alt"></i> Address
+                                                <i class="fas fa-map-marker-alt"></i> <%=User.address%>
                                         </p>
                                         <p class="card-text text-muted txtPadding">
-                                                <i class="fas fa-birthday-cake"></i> DOB
+                                                <i class="fas fa-birthday-cake"></i> <%=moment(User.dob).format('MMMM Do YYYY'); %>
                                         </p>
                                         <p class="card-text text-muted txtPadding">
-                                                <i class="far fa-envelope"></i> Email
+                                                <i class="far fa-envelope"></i> <%=User.email%>
                                         </p>
                                         <p>
                                                 <strong>205</strong> Following <strong>55</strong> Followers
-                                                <button class="btn btn-info float-right">Update Profile</button>
+                                                <% if(User._id.equals(userId)){ %>
+                                                        <a href="/profile/<%=User.username%>/edit" 
+                                                        class="btn btn-info float-right">Update Profile</a>
+                                                <% }%>
                                         </p>
                                         
                                 </div>
@@ -42,46 +57,53 @@
                 </div>
         </div>
         <div class="container" id="homePageContainer">
-                <div class="card">
-                        <div class="card-body">
-                                <div class="card-title">
-                                        Create Post
+                <% if(User._id.equals(userId)){ %>
+                        <div class="card">
+                                <div class="card-body">
+                                        <div class="card-title">
+                                                Create Post
+                                        </div>
+                                        <form action="/post" method="POST">
+                                                <textarea name="text" rows="5" class="form-control"> Write sometihng .....</textarea>
+                                                <input type="text" name="image" placeholder="Image" class="form-control">
+                                                <button class="btn btn-primary">Post</button>
+                                        </form>
                                 </div>
-                                <form action="/post" method="POST">
-                                        <textarea name="text" rows="5" class="form-control"> Write sometihng .....</textarea>
-                                        <input type="text" name="image" placeholder="Image" class="form-control">
-                                        <button class="btn btn-primary">Post</button>
-                                </form>
                         </div>
-                </div>
+                <% } %>
+
                 <h1>Following Users posts</h1>
                 <br>
-                <% for(let i=currentUser.posts.length-1; i>=0; i--){ %>
+                <% for(let i=User.posts.length-1; i>=0; i--){ %>
                         <div class="card">
                         <div class="card-body">
-                                <h5 class="card-title"><%=currentUser.posts[i].author.username %></h5>
-                                <p class="card-text"><%= currentUser.posts[i].text %></p>
+                                <h5>
+                                        <img src="https://content-static.upwork.com/uploads/2014/10/01073427/profilephoto1.jpg" class="img-thumbnail rounded-circle">
+                                        <a  class="card-title" 
+                                        href="/profile/<%=User.posts[i].author.username%>"><%=User.posts[i].author.username %></a> 
+                                </h5>
+                                <p class="card-text"><%= User.posts[i].text %></p>
                                 
                         </div>
-                        <%if(currentUser.posts[i].image!==""){ %>
-                                <img src="<%= currentUser.posts[i].image %>" class="card-img-top" alt="...">
+                        <%if(User.posts[i].image!==""){ %>
+                                <img src="<%= User.posts[i].image %>" class="card-img-top" alt="...">
                         <%} %>
                         <div class="card-body">
                                 <% var status=false;   %>
-                                <% for(let l of currentUser.posts[i].likes){   %>
+                                <% for(let l of User.posts[i].likes){   %>
                                 <%  if(l==userId){  %>
                                         <%  status=true;  %>
                                         <%  break; %>
                                 <% } %>
                                 <% }  %>
                                 <%  if(status){  %>
-                                <a href="/post/<%= currentUser.posts[i]._id%>/unlike" class="likeBtn"><i class="fas fa-heart fa-2x"></i></a>
-                                <a href="/post/<%= currentUser.posts[i]._id%>/comments"><i class="far fa-comment-alt fa-2x"></i></a>
-                                <p class="count"><span><%= currentUser.posts[i].likes.length %></span> likes</p>
+                                <a href="/post/<%= User.posts[i]._id%>/unlike" class="likeBtn"><i class="fas fa-heart fa-2x"></i></a>
+                                <a href="/post/<%= User.posts[i]._id%>/comments"><i class="far fa-comment-alt fa-2x"></i></a>
+                                <p class="count"><span><%= User.posts[i].likes.length %></span> likes</p>
                                 <%  }else{  %>
-                                <a href="/post/<%= currentUser.posts[i]._id%>/like" class="likeBtn"><i class="far fa-heart fa-2x"></i></a>
-                                <a href="/post/<%= currentUser.posts[i]._id%>/comments"><i class="far fa-comment-alt fa-2x"></i></a>
-                                <p class="count"><span><%= currentUser.posts[i].likes.length %></span> likes</p>
+                                <a href="/post/<%= User.posts[i]._id%>/like" class="likeBtn"><i class="far fa-heart fa-2x"></i></a>
+                                <a href="/post/<%= User.posts[i]._id%>/comments"><i class="far fa-comment-alt fa-2x"></i></a>
+                                <p class="count"><span><%= User.posts[i].likes.length %></span> likes</p>
                                 <%  } %>
                         </div>   
                         </div>
