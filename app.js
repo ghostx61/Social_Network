@@ -92,7 +92,8 @@ app.post("/signup", function(req, res){
             return res.redirect("/signup");
         }
         passport.authenticate("local")(req, res, function(){
-        res.redirect("/profile/"+user.username);
+         console.log(req.user.username);   
+        res.redirect("/profile/"+req.user.username);
         });
     });
 });
@@ -148,7 +149,7 @@ app.post("/post", function(req, res){
                 console.log(err);
             }else{
                 console.log(data);
-                res.redirect("/profile");
+                res.redirect("back");
             }
         })
     })

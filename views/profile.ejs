@@ -39,7 +39,10 @@
                                                 <i class="fas fa-map-marker-alt"></i> <%=User.address%>
                                         </p>
                                         <p class="card-text text-muted txtPadding">
-                                                <i class="fas fa-birthday-cake"></i> <%=moment(User.dob).format('MMMM Do YYYY'); %>
+                                                <i class="fas fa-birthday-cake"></i>
+                                                <% if(User.dob){ %>
+                                                        <%=moment(User.dob).format('MMMM Do YYYY'); %>
+                                               <% } %>
                                         </p>
                                         <p class="card-text text-muted txtPadding">
                                                 <i class="far fa-envelope"></i> <%=User.email%>

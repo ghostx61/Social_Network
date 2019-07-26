@@ -4,18 +4,20 @@
         <title></title>
     </head>
     <body>
-        <form action="/profile/ninad123?_method=PUT" method="POST">
+        <form action="/profile/<%=user.username%>?_method=PUT" method="POST">
             <input type="text" name="user[fname]" value="<%= user.fname %>">
             <input type="text" name="user[lname]" value="<%= user.lname %>">
             <input type="text" name="user[email]" value="<%= user.email %>">
             <input type="text" name="user[bio]" value="<%= user.bio %>">
             <input type="text" name="user[address]" value="<%= user.address %>">
-            <% if((user.dob.getMonth()+1)<10){ %>
+            <% if(user.dob && (user.dob.getMonth()+1)<10){ %>
                 <input type="date" name="user[dob]" 
                 value="<%=user.dob.getFullYear()%>-0<%=user.dob.getMonth()+1%>-<%=user.dob.getDate()%>">
-            <% }else{ %>
+            <% }else if(user.dob){ %>
                 <input type="date" name="user[dob]" 
                 value="<%=user.dob.getFullYear()%>-<%=user.dob.getMonth()+1%>-<%=user.dob.getDate()%>">
+            <% }else{ %>
+                <input type="date" name="user[dob]">
             <% } %>
             <button>Submit</button>
         </form>
