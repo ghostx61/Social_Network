@@ -66,3 +66,11 @@ h5 a:hover{
     max-width:3.5rem;
     border: 0;
 }
+
+.accPic{
+    width: 25px;
+}
+
+body{
+    margin-top: 67px;
+}

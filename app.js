@@ -60,7 +60,7 @@ app.get("/", isLoggedIn, function(req, res){
         postArray.sort(function(a, b){
             return b.createdAt.getTime() - a.createdAt.getTime();
           });
-        res.render("index", {posts: postArray, userId: currentUser._id});
+        res.render("index", {posts: postArray, userId: currentUser._id, User: req.user});
     });
 });
 
