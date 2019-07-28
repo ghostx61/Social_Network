@@ -319,23 +319,41 @@ app.post("/post/:postId/comment", function(req, res){
     });
 });
 
-app.get("/profile/:username/edit", function(req, res){
+app.get("/profile/:username/edit", profileOwnership, function(req, res){
     User.findOne({username: req.params.username}, function(err, user){
         if(err){
             console.log(err);
         }else{
-            res.render("profileEdit", {user: user});
+            res.render("profileEdit", {user: user, User: req.user});
         }
     });
 });
 
-app.put("/profile/:username", function(req, res){
-    console.log(req.body.user);
-    User.findOneAndUpdate({username: req.params.username}, req.body.user, 
-        function(err, newUser){
+app.put("/profile/:username", upload.single('image'), function(req, res){
+    User.findOne({username: req.params.username}, async function(err, newUser){
             if(err){
                 console.log(err);
             }else{
+                if(req.file){
+                    try{
+                        if(newUser.imageId){
+                            await cloudinary.v2.uploader.destroy(newUser.imageId);
+                        }
+                        var result = await cloudinary.v2.uploader.upload(req.file.path);
+                        newUser.image = result.secure_url;
+                        newUser.imageId = result.public_id;
+                    }
+                    catch{
+                        return console.log(err);
+                    }
+                }
+                newUser.fname = req.body.fname;
+                newUser.lname = req.body.lname;
+                newUser.email = req.body.email;
+                newUser.bio = req.body.bio;
+                newUser.address = req.body.address;
+                newUser.dob = req.body.dob;
+                newUser.save();
                 console.log(newUser);
                 res.redirect("/profile/"+req.params.username);
             }
@@ -353,4 +371,12 @@ function isLoggedIn(req, res, next){
         return next();
     }
     res.redirect("/login");
+}
+
+function profileOwnership(req, res, next){
+    if(req.isAuthenticated()){
+        if(req.user.username === req.params.username)
+        return next();
+    }
+    res.redirect("back");
 }

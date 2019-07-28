@@ -1,25 +1,46 @@
-<!DOCTYPE html>
-<html>
-    <head>
-        <title></title>
-    </head>
-    <body>
-        <form action="/profile/<%=user.username%>?_method=PUT" method="POST">
-            <input type="text" name="user[fname]" value="<%= user.fname %>">
-            <input type="text" name="user[lname]" value="<%= user.lname %>">
-            <input type="text" name="user[email]" value="<%= user.email %>">
-            <input type="text" name="user[bio]" value="<%= user.bio %>">
-            <input type="text" name="user[address]" value="<%= user.address %>">
+<% include partials/header %>
+
+<form action="/profile/<%=user.username%>?_method=PUT" method="POST" 
+    enctype="multipart/form-data">
+    <div class="container">
+        <div class="form-group">
+            <label for="fname">First Name</label>
+            <input type="text" name="fname" value="<%= user.fname %>" id="fname" class="form-control">
+        </div>
+        <div class="form-group">
+            <label for="lname">Last Name</label>
+            <input type="text" name="lname" value="<%= user.lname %>" id="lname" class="form-control">
+        </div>
+        <div class="form-group">
+            <label for="email">E-mail</label>
+            <input type="text" name="email" value="<%= user.email %>" id="email" class="form-control">
+        </div>
+        <div class="form-group ">
+            <label for="image">Profile Picture</label>
+            <input type="file" class="form-control-file " id="image" name="image" accept="image/*">
+        </div>
+        <div class="form-group">
+            <label for="bio">Bio</label>
+            <input type="text" name="bio" value="<%= user.bio %>" id="bio" class="form-control">
+        </div>
+        <div class="form-group">
+            <label for="address">Address</label>
+            <input type="text" name="address" value="<%= user.address %>" class="form-control">
+        </div>
+        <div class="form-group">
+            <label for="dob">Date of Birth</label>
             <% if(user.dob && (user.dob.getMonth()+1)<10){ %>
-                <input type="date" name="user[dob]" 
-                value="<%=user.dob.getFullYear()%>-0<%=user.dob.getMonth()+1%>-<%=user.dob.getDate()%>">
+                <input type="date" name="dob" 
+                value="<%=user.dob.getFullYear()%>-0<%=user.dob.getMonth()+1%>-<%=user.dob.getDate()%>" class="form-control" id="dob">
             <% }else if(user.dob){ %>
-                <input type="date" name="user[dob]" 
-                value="<%=user.dob.getFullYear()%>-<%=user.dob.getMonth()+1%>-<%=user.dob.getDate()%>">
+                <input type="date" name="dob" 
+                value="<%=user.dob.getFullYear()%>-<%=user.dob.getMonth()+1%>-<%=user.dob.getDate()%>" class="form-control" id="dob">
             <% }else{ %>
-                <input type="date" name="user[dob]">
+                <input type="date" name="dob" class="form-control" id="dob">
             <% } %>
-            <button>Submit</button>
-        </form>
-    </body>
-</html>
+        </div>
+        <button class="btn btn-primary">Submit</button>
+    </div>
+</form>
+
+<% include partials/footer %>

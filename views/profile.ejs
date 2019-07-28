@@ -1,17 +1,16 @@
 <% include partials/header %>
 
 
-
-
-
-        
+  
 <div class="container containerProfile">
         <div class="card">
                 <div class="card-body">
                         <div class="row">
                                 <div class="col-3">
-                                       
-                                        <img src="https://content-static.upwork.com/uploads/2014/10/01073427/profilephoto1.jpg" alt="..." class="img-thumbnail img-fluid profilePic">
+                                        <img src="<%= User.image %>" 
+                                        alt="... " 
+                                        onerror=this.src='https://www.pngkey.com/png/detail/202-2024932_profile-icon-question-mark-icon-svg.png'
+                                        class="img-thumbnail img-fluid profilePic">
                                 </div>
                                 <div class="col-9">
                                         <% if(!(User._id.equals(userId))){ %>
