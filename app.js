@@ -76,9 +76,14 @@ passport.deserializeUser(User.deserializeUser());
 app.get("/", isLoggedIn, function(req, res){
     var currentUser =req.user;
     //console.log(currentUser.follow);
-    User.find({_id:{$in: currentUser.follow}}).populate("posts").exec(function(err, users){
+    User.find({_id:{$in: currentUser.follow}}).populate("posts").lean()
+    .exec(function(err, users){
+        //lean()- convert mongoose document to plain js object 
         var postArray=[];
         for(let user of users){
+            for(let post of user.posts){
+                post.profilePic = user.image; 
+            }
             postArray= postArray.concat(user.posts);
         }
         postArray.sort(function(a, b){

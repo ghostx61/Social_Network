@@ -9,7 +9,7 @@
                                 <div class="col-3">
                                         <img src="<%= User.image %>" 
                                         alt="... " 
-                                        onerror=this.src='https://www.pngkey.com/png/detail/202-2024932_profile-icon-question-mark-icon-svg.png'
+                                        onerror=this.src='https://www.searchpng.com/wp-content/uploads/2019/02/Deafult-Profile-Pitcher.png'
                                         class="img-thumbnail img-fluid profilePic">
                                 </div>
                                 <div class="col-9">
@@ -81,9 +81,9 @@
                         <div class="card">
                         <div class="card-body">
                                 <h5>
-                                        <img src="https://content-static.upwork.com/uploads/2014/10/01073427/profilephoto1.jpg" class="img-thumbnail rounded-circle">
                                         <a  class="card-title" 
-                                        href="/profile/<%=User.posts[i].author.username%>"><%=User.posts[i].author.username %></a> 
+                                        href="/profile/<%=User.posts[i].author.username%>"><img src="<%= User.image %>" class="img-thumbnail rounded-circle postImg" 
+                                        onerror=this.src='https://www.searchpng.com/wp-content/uploads/2019/02/Deafult-Profile-Pitcher.png'> <%=User.posts[i].author.username %></a> 
                                 </h5>
                                 <p class="card-text"><%= User.posts[i].text %></p>
                                 

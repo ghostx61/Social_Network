@@ -63,13 +63,16 @@ h5 a:hover{
 }
 
 .rounded-circle{
-    max-width:3.5rem;
     border: 0;
 }
 
 .accPic{
     width: 25px;
     height:25px;
+}
+.postImg{
+    width: 54px;
+    height:54px;
 }
 
 body{

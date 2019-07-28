@@ -8,7 +8,7 @@ var PostSchema = new mongoose.Schema({
             type: mongoose.Schema.Types.ObjectId,
             ref : "User"
         },
-        username: String
+        username: String,
     },
     likes: [String],
     comments:

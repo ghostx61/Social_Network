@@ -8,7 +8,8 @@
                 <div class="card">
                     <div class="card-body">
                         <h5 class="card-title">
-                           <a href="/profile/<%=post.author.username%>"><%=post.author.username %></a> 
+                           <a href="/profile/<%=post.author.username%>"><img src="<%= post.profilePic %>" class="img-thumbnail rounded-circle postImg" 
+                            onerror=this.src='https://www.searchpng.com/wp-content/uploads/2019/02/Deafult-Profile-Pitcher.png'> <%=post.author.username %></a> 
                         </h5>
                         <p class="card-text"><%= post.text %></p>
                         
