@@ -61,10 +61,16 @@
                                         <div class="card-title">
                                                 Create Post
                                         </div>
-                                        <form action="/post" method="POST">
-                                                <textarea name="text" rows="5" class="form-control"> Write sometihng .....</textarea>
-                                                <input type="text" name="image" placeholder="Image" class="form-control">
-                                                <button class="btn btn-primary">Post</button>
+                                        <form action="/post" method="POST" id="postForm" enctype="">
+                                                <!-- enctype="multipart/form-data"(toggle in index.js) -->
+                                                <div class="form-group">
+                                                        <textarea name="text" rows="5" class="form-control" placeholder="Write something here ......"></textarea>
+                                                </div>
+                                                <div class="form-group ">
+                                                        <label for="image">Image</label>
+                                                        <input type="file" class="form-control-file " id="image" name="image" accept="image/*">
+                                                </div>
+                                                <button class="btn btn-primary float-right " id="postbtn">Post</button>
                                         </form>
                                 </div>
                         </div>

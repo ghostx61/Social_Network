@@ -11,6 +11,7 @@ var Post = require("./models/post");
 var User = require("./models/user");
 
 
+require('dotenv').config()
 app.use(express.static(__dirname +"/public"));
 app.use(methodOverride("_method"));
 app.locals.moment = require('moment');
@@ -27,6 +28,29 @@ var $ = require("jquery")(window);
 
 var bodyParser = require("body-parser");
 app.use(bodyParser.urlencoded({extended: true}));
+
+//cloudinary config
+var multer = require('multer');
+var storage = multer.diskStorage({
+  filename: function(req, file, callback) {
+    callback(null, Date.now() + file.originalname);
+  }
+});
+var imageFilter = function (req, file, cb) {
+    // accept image files only
+    if (!file.originalname.match(/\.(jpg|jpeg|png|gif)$/i)) {
+        return cb(new Error('Only image files are allowed!'), false);
+    }
+    cb(null, true);
+};
+var upload = multer({ storage: storage, fileFilter: imageFilter})
+
+var cloudinary = require('cloudinary');
+cloudinary.config({ 
+  cloud_name: 'ghostx61', 
+  api_key: process.env.CLOUDINARY_API_KEY, 
+  api_secret: process.env.CLOUDINARY_API_SECRET
+});
 
 mongoose.connect("mongodb://localhost:27017/mongoDemo_v7");
 
@@ -138,6 +162,7 @@ app.post("/post", function(req, res){
         id: req.user._id,
         username: req.user.username
     }
+    console.log(req.body);
     Post.create({
         text: req.body.text,
         image: req.body.image,
@@ -148,11 +173,42 @@ app.post("/post", function(req, res){
             if(err){
                 console.log(err);
             }else{
-                console.log(data);
+                console.log("post");
                 res.redirect("back");
             }
         })
     })
+});
+
+app.post("/post/image", isLoggedIn, upload.single('image'), function(req, res){
+    var currentUser =req.user;
+    var author = {
+        id: req.user._id,
+        username: req.user.username
+    }
+    console.log(req.body);
+    cloudinary.v2.uploader.upload(req.file.path, function(err, result) {
+        if(err){
+            console.log(err)
+        }else{
+            Post.create({
+                text: req.body.text,
+                image: result.secure_url,
+                author: author
+            }, function(err, post){
+                currentUser.posts.push(post);
+                currentUser.save(function(err, data){
+                    if(err){
+                        console.log(err);
+                    }else{
+                        console.log("image");
+                        res.redirect("back");
+                    }
+                });
+            });
+        }
+        
+    });
 });
 
 app.get("/findUsers", isLoggedIn, function(req, res){

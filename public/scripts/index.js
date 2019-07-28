@@ -4,6 +4,17 @@ $(document).ready(function(){
         console.log($( this ).children( 'i' ).hasClass('fa-comment-alt'));
     });
 
+    $('#image').change(function(){
+        $('#postForm').attr("action", "/post/image");
+        $('#postForm').attr("enctype", "multipart/form-data");
+        $('textarea').attr("placeholder", "Write something about the image ...");
+    });
+
+    // $('#postbtn').onclick(function(){
+    //     $('#postForm').attr("action", "/post");
+    // });
+
+
     $('.likeBtn').click(function(event){
         event.preventDefault();
        var likeB = $(this);
