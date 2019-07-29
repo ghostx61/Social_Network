@@ -53,11 +53,11 @@
     margin-bottom: 0.45rem;
 }
 
-h5 a{
+.link{
     color:black;
 }
 
-h5 a:hover{
+.link:hover{
     text-decoration: none;
     color: lightslategray;
 }
@@ -77,4 +77,12 @@ h5 a:hover{
 
 body{
     margin-top: 67px;
+}
+
+.find-container{
+    max-width: 700px;
+}
+.findImg{
+    width: 70px;
+    height:70px;
 }

@@ -89,7 +89,7 @@ app.get("/", isLoggedIn, function(req, res){
         postArray.sort(function(a, b){
             return b.createdAt.getTime() - a.createdAt.getTime();
           });
-        res.render("index", {posts: postArray, userId: currentUser._id, User: req.user});
+        res.render("index", {posts: postArray, userId: currentUser._id, User: req.user, page:"index"});
     });
 });
 
@@ -153,7 +153,7 @@ app.get("/profile/:username", isLoggedIn, function(req, res){
                     if(follow == foundUser._id)
                         status=true;
                 }
-                res.render("profile" , {User: foundUser, userId: req.user._id, following:status});
+                res.render("profile" , {user: foundUser, userId: req.user._id, following:status, User: req.user});
             }
         }
     );
@@ -216,14 +216,28 @@ app.post("/post/image", isLoggedIn, upload.single('image'), function(req, res){
     });
 });
 
-app.get("/findUsers", isLoggedIn, function(req, res){
-    User.find({}, function(err, allusers){
-        if(err){
-            console.log(err);
-        }else{
-            res.render("users", {allusers: allusers, currentUser: req.user});
-        }
-    });
+app.get("/findFriends", isLoggedIn, function(req, res){
+    var result= 0;
+    if(req.query.search){
+        //search
+        const regex = new RegExp(escapeRegex(req.query.search), 'gi');
+        User.find({$or: [{fname: regex,}, {lname: regex}, {username:regex}]}, 
+            function(err, allusers){
+            if(err){
+                console.log(err);
+            }else{
+                if(allusers.length < 1){
+                    result=1;
+                }
+                res.render("users", {allusers: allusers, User: req.user, result: result, page:"users"});
+            }
+        });
+    }
+    else{
+        let allusers=[];
+        result=2;
+        res.render("users", {allusers: allusers, User: req.user, result: result, page:"users"});
+    }
 });
 
 app.post("/follow/:id", function(req, res){
@@ -385,3 +399,8 @@ function profileOwnership(req, res, next){
     }
     res.redirect("back");
 }
+
+function escapeRegex(text) {
+    return text.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&");
+};
+

@@ -7,44 +7,44 @@
                 <div class="card-body">
                         <div class="row">
                                 <div class="col-3">
-                                        <img src="<%= User.image %>" 
+                                        <img src="<%= user.image %>" 
                                         alt="... " 
                                         onerror=this.src='https://www.searchpng.com/wp-content/uploads/2019/02/Deafult-Profile-Pitcher.png'
                                         class="img-thumbnail img-fluid profilePic">
                                 </div>
                                 <div class="col-9">
-                                        <% if(!(User._id.equals(userId))){ %>
+                                        <% if(!(user._id.equals(userId))){ %>
                                                 <%if(following){ %>
-                                                        <form action="/unfollow/<%=User._id%>" method="POST">
+                                                        <form action="/unfollow/<%=user._id%>" method="POST">
                                                                 <button class="btn btn-primary float-right">Following</button>
                                                         </form>
                                                 <% }else{ %>
-                                                        <form action="/follow/<%=User._id%>" method="POST">
+                                                        <form action="/follow/<%=user._id%>" method="POST">
                                                                 <button class="btn btn-outline-primary float-right">Follow</button>
                                                         </form>  
                                                 <% } %>     
                                         <% } %>
-                                        <h4 class="card-title"><%= User.fname%> <%= User.lname%></h4>
+                                        <h4 class="card-title"><%= user.fname%> <%= user.lname%></h4>
                                         <h5 class="card-subtitle mb-2 text-muted">
-                                                <%= User.username%>
+                                                <%= user.username%>
                                         </h5>
                                         <p class="card-text txtPadding">Engineer by Education, Entrepreneur by Profession, Nano-Science Researcher by Interest, YouTuber by Passion... (link: http://youtube.com/TechnicalGuruji) youtube.com/TechnicalGuruji Your Daily Tech Dose!!</p>
                                         <p class="card-text text-muted txtPadding">
-                                                <i class="fas fa-map-marker-alt"></i> <%=User.address%>
+                                                <i class="fas fa-map-marker-alt"></i> <%=user.address%>
                                         </p>
                                         <p class="card-text text-muted txtPadding">
                                                 <i class="fas fa-birthday-cake"></i>
-                                                <% if(User.dob){ %>
-                                                        <%=moment(User.dob).format('MMMM Do YYYY'); %>
+                                                <% if(user.dob){ %>
+                                                        <%=moment(user.dob).format('MMMM Do YYYY'); %>
                                                <% } %>
                                         </p>
                                         <p class="card-text text-muted txtPadding">
-                                                <i class="far fa-envelope"></i> <%=User.email%>
+                                                <i class="far fa-envelope"></i> <%=user.email%>
                                         </p>
                                         <p>
                                                 <strong>205</strong> Following <strong>55</strong> Followers
-                                                <% if(User._id.equals(userId)){ %>
-                                                        <a href="/profile/<%=User.username%>/edit" 
+                                                <% if(user._id.equals(userId)){ %>
+                                                        <a href="/profile/<%=user.username%>/edit" 
                                                         class="btn btn-info float-right">Update Profile</a>
                                                 <% }%>
                                         </p>
@@ -54,7 +54,7 @@
                 </div>
         </div>
         <div class="container" id="homePageContainer">
-                <% if(User._id.equals(userId)){ %>
+                <% if(user._id.equals(userId)){ %>
                         <div class="card">
                                 <div class="card-body">
                                         <div class="card-title">
@@ -77,36 +77,36 @@
 
                 <h1>Following Users posts</h1>
                 <br>
-                <% for(let i=User.posts.length-1; i>=0; i--){ %>
+                <% for(let i=user.posts.length-1; i>=0; i--){ %>
                         <div class="card">
                         <div class="card-body">
                                 <h5>
-                                        <a  class="card-title" 
-                                        href="/profile/<%=User.posts[i].author.username%>"><img src="<%= User.image %>" class="img-thumbnail rounded-circle postImg" 
-                                        onerror=this.src='https://www.searchpng.com/wp-content/uploads/2019/02/Deafult-Profile-Pitcher.png'> <%=User.posts[i].author.username %></a> 
+                                        <a  class="card-title link" 
+                                        href="/profile/<%=user.posts[i].author.username%>"><img src="<%= user.image %>" class="img-thumbnail rounded-circle postImg" 
+                                        onerror=this.src='https://www.searchpng.com/wp-content/uploads/2019/02/Deafult-Profile-Pitcher.png'> <%=user.posts[i].author.username %></a> 
                                 </h5>
-                                <p class="card-text"><%= User.posts[i].text %></p>
+                                <p class="card-text"><%= user.posts[i].text %></p>
                                 
                         </div>
-                        <%if(User.posts[i].image!==""){ %>
-                                <img src="<%= User.posts[i].image %>" class="card-img-top" alt="...">
+                        <%if(user.posts[i].image!==""){ %>
+                                <img src="<%= user.posts[i].image %>" class="card-img-top" alt="...">
                         <%} %>
                         <div class="card-body">
                                 <% var status=false;   %>
-                                <% for(let l of User.posts[i].likes){   %>
+                                <% for(let l of user.posts[i].likes){   %>
                                 <%  if(l==userId){  %>
                                         <%  status=true;  %>
                                         <%  break; %>
                                 <% } %>
                                 <% }  %>
                                 <%  if(status){  %>
-                                <a href="/post/<%= User.posts[i]._id%>/unlike" class="likeBtn"><i class="fas fa-heart fa-2x"></i></a>
-                                <a href="/post/<%= User.posts[i]._id%>/comments"><i class="far fa-comment-alt fa-2x"></i></a>
-                                <p class="count"><span><%= User.posts[i].likes.length %></span> likes</p>
+                                <a href="/post/<%= user.posts[i]._id%>/unlike" class="likeBtn"><i class="fas fa-heart fa-2x"></i></a>
+                                <a href="/post/<%= user.posts[i]._id%>/comments"><i class="far fa-comment-alt fa-2x"></i></a>
+                                <p class="count"><span><%= user.posts[i].likes.length %></span> likes</p>
                                 <%  }else{  %>
-                                <a href="/post/<%= User.posts[i]._id%>/like" class="likeBtn"><i class="far fa-heart fa-2x"></i></a>
-                                <a href="/post/<%= User.posts[i]._id%>/comments"><i class="far fa-comment-alt fa-2x"></i></a>
-                                <p class="count"><span><%= User.posts[i].likes.length %></span> likes</p>
+                                <a href="/post/<%= user.posts[i]._id%>/like" class="likeBtn"><i class="far fa-heart fa-2x"></i></a>
+                                <a href="/post/<%= user.posts[i]._id%>/comments"><i class="far fa-comment-alt fa-2x"></i></a>
+                                <p class="count"><span><%= user.posts[i].likes.length %></span> likes</p>
                                 <%  } %>
                         </div>   
                         </div>
