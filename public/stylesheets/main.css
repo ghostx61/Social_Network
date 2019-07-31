@@ -77,6 +77,7 @@
 
 body{
     margin-top: 67px;
+    background-color: #fafafa;
 }
 
 .find-container{
@@ -85,4 +86,16 @@ body{
 .findImg{
     width: 70px;
     height:70px;
+}
+
+.postBtnpadding{
+    padding-top:35px;
+}
+
+textarea {
+    resize: none;
+}
+
+.card-text{
+    font-family: 'Roboto Slab', serif;
 }

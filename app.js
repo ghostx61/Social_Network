@@ -75,7 +75,6 @@ passport.deserializeUser(User.deserializeUser());
 
 app.get("/", isLoggedIn, function(req, res){
     var currentUser =req.user;
-    //console.log(currentUser.follow);
     User.find({_id:{$in: currentUser.follow}}).populate("posts").lean()
     .exec(function(err, users){
         //lean()- convert mongoose document to plain js object 
@@ -304,13 +303,15 @@ app.get("/post/:postId/unlike", function(req, res){
     });
 });
 
-app.get("/post/:postId/comments", function(req, res){
+app.get("/post/:postId/comments", isLoggedIn, function(req, res){
     Post.findById(req.params.postId).populate('comments').exec(function(err, newPost){
         if(err){
             console.log(err);
         }else{
-            console.log(newPost);
-            res.render("comment", {post: newPost});
+            User.findById(newPost.author.id, function(err, user){
+                var pic = user.image;
+                res.render("comment", {post: newPost, User: req.user, pic:pic});
+            });
         }
     });
 }); 

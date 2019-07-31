@@ -1,9 +1,7 @@
 <% include partials/header %>
 
         <div class="container" id="homePageContainer">
-            
-            <h1>Following Users posts</h1>
-            <br>
+      
             <%for(let post of posts){ %>
                 <div class="card">
                     <div class="card-body">
@@ -17,7 +15,7 @@
                     <%if(post.image!==""){ %>
                         <img src="<%= post.image %>" class="card-img-top" alt="...">
                     <%} %>
-                    <div class="card-body">
+                    <div class="card-body pb-0">
                        <% var status=false;   %>
                        <% for(let l of post.likes){   %>
                           <%  if(l==userId){  %>
