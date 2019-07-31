@@ -75,9 +75,9 @@ passport.deserializeUser(User.deserializeUser());
 
 app.get("/", isLoggedIn, function(req, res){
     var currentUser =req.user;
+    //lean()- convert mongoose document to plain js object 
     User.find({_id:{$in: currentUser.follow}}).populate("posts").lean()
     .exec(function(err, users){
-        //lean()- convert mongoose document to plain js object 
         var postArray=[];
         for(let user of users){
             for(let post of user.posts){
@@ -85,10 +85,25 @@ app.get("/", isLoggedIn, function(req, res){
             }
             postArray= postArray.concat(user.posts);
         }
+        //sort post by time
         postArray.sort(function(a, b){
             return b.createdAt.getTime() - a.createdAt.getTime();
-          });
-        res.render("index", {posts: postArray, userId: currentUser._id, User: req.user, page:"index"});
+        });
+        //pagination
+        var perPage = 6;
+        var pageQuery = parseInt(req.query.page);
+        var pageNumber = pageQuery ? pageQuery : 1;
+        var postArr = [];
+        var count = Math.ceil(postArray.length / perPage);
+        if(postArray.length>6){
+            var loopIndex =((pageNumber-1)*6);
+            for(let i=loopIndex; i<=loopIndex+5; i++){
+                if(!postArray[i])
+                    break;
+                postArr.push(postArray[i]);
+            }
+        }
+        res.render("index", {posts: postArr, userId: currentUser._id, User: req.user, page:"index", current: pageNumber, pages: count});
     });
 });
 
@@ -142,17 +157,40 @@ app.get("/logout", function(req, res){
 
 //user posts
 app.get("/profile/:username", isLoggedIn, function(req, res){
-    User.findOne({username: req.params.username}).populate("posts").exec(
+    User.findOne({username: req.params.username}).populate('posts').lean().exec(
         function(err, foundUser){
             if(err && foundUser){
                 console.log(err);
             }else{
+                // follow status
                 var status=false;
                 for(let follow of req.user.follow){ 
                     if(follow == foundUser._id)
                         status=true;
                 }
-                res.render("profile" , {user: foundUser, userId: req.user._id, following:status, User: req.user});
+                var posts =[];
+                //post in order of time
+                for(let i=foundUser.posts.length-1; i>=0; i--){
+                    posts.push(foundUser.posts[i]);
+                }
+                foundUser.posts=posts;
+
+                //pagination
+                var perPage = 6;
+                var pageQuery = parseInt(req.query.page);
+                var pageNumber = pageQuery ? pageQuery : 1;
+                var userPostArr = [];
+                var count = Math.ceil(foundUser.posts.length / perPage);
+                if(foundUser.posts.length>6){
+                    var loopIndex =((pageNumber-1)*6);
+                    for(let i=loopIndex; i<=loopIndex+5; i++){
+                        if(!foundUser.posts[i])
+                            break;
+                        userPostArr.push(foundUser.posts[i]);
+                    }
+                    foundUser.posts=userPostArr;
+                }
+                res.render("profile" , {user: foundUser, userId: req.user._id, following:status, User: req.user, current: pageNumber, pages: count});
             }
         }
     );
@@ -178,7 +216,7 @@ app.post("/post", function(req, res){
                 console.log(err);
             }else{
                 console.log("post");
-                res.redirect("back");
+                res.redirect("/profile/pd123?page=1");
             }
         })
     })
