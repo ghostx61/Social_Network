@@ -97,5 +97,9 @@ textarea {
 }
 
 .card-text{
-    font-family: 'Roboto Slab', serif;
+    font-family: 'Roboto', serif;
+}
+
+.count{
+    font-weight: 600;
 }

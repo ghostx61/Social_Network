@@ -216,7 +216,7 @@ app.post("/post", function(req, res){
                 console.log(err);
             }else{
                 console.log("post");
-                res.redirect("/profile/pd123?page=1");
+                res.redirect("/profile/"+req.user.username+"?page=1");
             }
         })
     })

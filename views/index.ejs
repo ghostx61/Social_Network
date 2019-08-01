@@ -4,7 +4,7 @@
     
         <%for(let post of posts){ %>
             <div class="card">
-                <div class="card-body">
+                <div class="card-body pb-0">
                     <h5 class="card-title">
                         <a href="/profile/<%=post.author.username%>" class="link"><img src="<%= post.profilePic %>" class="img-thumbnail rounded-circle postImg" 
                         onerror=this.src='https://www.searchpng.com/wp-content/uploads/2019/02/Deafult-Profile-Pitcher.png'> <%=post.author.username %></a> 

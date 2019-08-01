@@ -28,7 +28,7 @@
                                         <h5 class="card-subtitle mb-2 text-muted">
                                                 <%= user.username%>
                                         </h5>
-                                        <p class="card-text txtPadding">Engineer by Education, Entrepreneur by Profession, Nano-Science Researcher by Interest, YouTuber by Passion... (link: http://youtube.com/TechnicalGuruji) youtube.com/TechnicalGuruji Your Daily Tech Dose!!</p>
+                                        <p class="card-text txtPadding"><%= user.bio%></p>
                                         <p class="card-text text-muted txtPadding">
                                                 <i class="fas fa-map-marker-alt"></i> <%=user.address%>
                                         </p>
@@ -41,13 +41,14 @@
                                         <p class="card-text text-muted txtPadding">
                                                 <i class="far fa-envelope"></i> <%=user.email%>
                                         </p>
-                                        <p>
+                                        
                                                 <strong>205</strong> Following <strong>55</strong> Followers
-                                                <% if(user._id.equals(userId)){ %>
-                                                        <a href="/profile/<%=user.username%>/edit" 
-                                                        class="btn btn-info float-right">Update Profile</a>
-                                                <% }%>
-                                        </p>
+                                                
+                                        
+                                        <% if(user._id.equals(userId)){ %>
+                                                <a href="/profile/<%=user.username%>/edit" 
+                                                class="btn btn-info float-right">Update Profile</a>
+                                        <% }%>
                                         
                                 </div>
                         </div> 
@@ -86,7 +87,7 @@
                 <br>
                 <% for(let i=0; i<=user.posts.length-1; i++){ %>
                         <div class="card">
-                        <div class="card-body">
+                        <div class="card-body pb-0">
                                 <h5>
                                         <a  class="card-title link" 
                                         href="/profile/<%=user.posts[i].author.username%>"><img src="<%= user.image %>" class="img-thumbnail rounded-circle postImg" 
