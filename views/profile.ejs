@@ -26,7 +26,7 @@
                                         <% } %>
                                         <h4 class="card-title"><%= user.fname%> <%= user.lname%></h4>
                                         <h5 class="card-subtitle mb-2 text-muted">
-                                                <%= user.username%>
+                                                @<%= user.username%>
                                         </h5>
                                         <p class="card-text txtPadding"><%= user.bio%></p>
                                         <p class="card-text text-muted txtPadding">
@@ -41,9 +41,10 @@
                                         <p class="card-text text-muted txtPadding">
                                                 <i class="far fa-envelope"></i> <%=user.email%>
                                         </p>
-                                        
-                                                <strong>205</strong> Following <strong>55</strong> Followers
-                                                
+                                        <span class="followNo">
+                                                <strong><%=user.follow.length%></strong> Following   &emsp; 
+                                                <strong><%=user.followers.length%></strong> Followers
+                                        </span>
                                         
                                         <% if(user._id.equals(userId)){ %>
                                                 <a href="/profile/<%=user.username%>/edit" 
@@ -57,9 +58,9 @@
         <div class="container" id="homePageContainer">
                 <% if(user._id.equals(userId)){ %>
                         <div class="card mt-2">
-                                        <div class="card-header">
-                                                        Create Post
-                                        </div>
+                                <div class="card-header">
+                                                Create Post
+                                </div>
                                 <div class="card-body">
                                        
                                         <form action="/post" method="POST" id="postForm" enctype="">
@@ -108,14 +109,21 @@
                                 <% } %>
                                 <% }  %>
                                 <%  if(status){  %>
-                                <a href="/post/<%= user.posts[i]._id%>/unlike" class="likeBtn"><i class="fas fa-heart fa-2x"></i></a>
-                                <a href="/post/<%= user.posts[i]._id%>/comments"><i class="far fa-comment-alt fa-2x"></i></a>
-                                <p class="count"><span><%= user.posts[i].likes.length %></span> likes</p>
+                                        <a href="/post/<%= user.posts[i]._id%>/unlike" class="likeBtn"><i class="fas fa-heart fa-2x"></i></a>
                                 <%  }else{  %>
-                                <a href="/post/<%= user.posts[i]._id%>/like" class="likeBtn"><i class="far fa-heart fa-2x"></i></a>
-                                <a href="/post/<%= user.posts[i]._id%>/comments"><i class="far fa-comment-alt fa-2x"></i></a>
-                                <p class="count"><span><%= user.posts[i].likes.length %></span> likes</p>
+                                        <a href="/post/<%= user.posts[i]._id%>/like" class="likeBtn"><i class="far fa-heart fa-2x"></i></a>
                                 <%  } %>
+                                <a href="/post/<%= user.posts[i]._id%>/comments"><i class="far fa-comment-alt fa-2x"></i></a>
+                                <div class="row">
+                                        <div class="col">
+                                                <p class="count"><span class="likeCount"><%= user.posts[i].likes.length %></span> likes &ensp;
+                                                <span><%= user.posts[i].comments.length %></span> comments      
+                                                </p>
+                                        </div>
+                                        <div class="col">
+                                                <p class="float-right time"><%=moment(user.posts[i].createdAt).fromNow()%></p>
+                                        </div>
+                                </div>
                         </div>   
                         </div>
                         <br>

@@ -103,3 +103,13 @@ textarea {
 .count{
     font-weight: 600;
 }
+.followNo{
+    font-family: 'Roboto', serif;
+}
+.navbar-brand{
+    font-family: 'Pacifico', cursive;
+}
+.time{
+    text-transform: uppercase;
+    font-size: smaller;
+}

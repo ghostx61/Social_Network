@@ -102,6 +102,8 @@ app.get("/", isLoggedIn, function(req, res){
                     break;
                 postArr.push(postArray[i]);
             }
+        }else{
+            postArr=postArray;
         }
         res.render("index", {posts: postArr, userId: currentUser._id, User: req.user, page:"index", current: pageNumber, pages: count});
     });
@@ -278,28 +280,41 @@ app.get("/findFriends", isLoggedIn, function(req, res){
 });
 
 app.post("/follow/:id", function(req, res){
-    req.user.follow.push(mongoose.Types.ObjectId(req.params.id));
-    req.user.save(function(err){
+    User.findById(req.params.id, function(err, followingUser){
         if(err){
-            console.log(err);
-        }else{
-            res.redirect("back");
+            return console.log(err);
         }
-    })
+        // following user's ID in follower user
+        followingUser.followers.push(mongoose.Types.ObjectId(req.user._id));
+        followingUser.save();
+        // follower user's ID in following user
+        req.user.follow.push(mongoose.Types.ObjectId(req.params.id));
+        req.user.save(function(err){
+            if(err){
+                console.log(err);
+            }else{
+                res.redirect("back");
+            }
+        });
+    });
+    
 });
 
 app.post("/unfollow/:id", function(req, res){
-    var unfollowedUserId = req.params.id;
-    var currentUserIdArray = req.user.follow;
-    var index=currentUserIdArray.indexOf(unfollowedUserId);
-    req.user.follow.splice(index,1);
-    req.user.save(function(err){
-        if(err){
-            console.log(err);
-        }else{
-            res.redirect("back");
-        }
-    })
+    User.findById(req.params.id, function(err, followingUser){
+        var index=followingUser.followers.indexOf(req.user._id);
+        followingUser.followers.splice(index,1);
+        followingUser.save();
+        var index=req.user.follow.indexOf(req.params.id);
+        req.user.follow.splice(index,1);
+        req.user.save(function(err){
+            if(err){
+                console.log(err);
+            }else{
+                res.redirect("back");
+            }
+        });
+    });
 });
 
 //like button

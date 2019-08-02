@@ -15,7 +15,8 @@
                             <p class="card-text"><%= post.text %></p>
                             <h6 class="text-muted">
                                     300 likes   20 Comments 
-                                    <span class="float-right">3 HOURS AGO</span>  
+                                    <span class="float-right time"><%= moment(post.createdAt).fromNow() %>
+                                    </span>  
                             </h6>
                             <hr>
                             <% for(let c of post.comments){  %>
@@ -24,7 +25,7 @@
                                         <%=c.author.username%>
                                     </strong> <%=c.text %> 
                                 </p>
-                                <p class="text-muted postCommentsFont">1 hour ago</p>
+                                <span class="text-muted postCommentsFont"><%= moment(c.createdAt).fromNow() %></span>
                                 <hr>
                             <% } %>
                             <form action="/post/<%= post._id %>/comment" method="POST">
@@ -44,13 +45,14 @@
         
         <% }else{ %>
             <div class="card mx-auto" id="postComment">
-                <div class="card-body">
+                <div class="card-body pb-0">
                     <h5 class="card-title"><img src="<%= pic %>" class="img-thumbnail rounded-circle postImg" 
                         onerror=this.src='https://www.searchpng.com/wp-content/uploads/2019/02/Deafult-Profile-Pitcher.png'> <a href="/profile/<%=post.author.username%>" class="link"><%=post.author.username %></a></h5>
                     <p class="card-text"> <%= post.text %> </p> 
                     <h6 class="text-muted">
                         300 likes   20 Comments 
-                        <span class="float-right">3 HOURS AGO</span>  
+                        <span class="float-right time"><%= moment(post.createdAt).fromNow() %>
+                        </span>  
                     </h6>
                 </div>
                 <ul class="list-group list-group-flush">
@@ -59,7 +61,7 @@
                             <p class="postCommentsFont">
                                 <strong><%=c.author.username%></strong> <%=c.text%> 
                             </p>
-                            <p class="text-muted postCommentsFont">1 hour ago</p>
+                            <p class="text-muted postCommentsFont"><%= moment(c.createdAt).fromNow() %></p>
                             <hr>
                         <% } %>
 

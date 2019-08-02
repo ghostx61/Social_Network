@@ -24,14 +24,20 @@
                         <% } %>
                     <% }  %>
                     <%  if(status){  %>
-                        <a href="/post/<%= post._id%>/unlike" class="likeBtn"><i class="fas fa-heart fa-2x"></i></a>
-                        <a href="/post/<%= post._id%>/comments"><i class="far fa-comment-alt fa-2x"></i></a>
-                        <p class="count"><span><%= post.likes.length %></span> likes</p>
+                            <a href="/post/<%= post._id%>/unlike" class="likeBtn"><i class="fas fa-heart fa-2x"></i></a>
                     <%  }else{  %>
-                        <a href="/post/<%= post._id%>/like" class="likeBtn"><i class="far fa-heart fa-2x"></i></a>
-                        <a href="/post/<%= post._id%>/comments"><i class="far fa-comment-alt fa-2x"></i></a>
-                        <p class="count"><span><%= post.likes.length %></span> likes</p>
+                            <a href="/post/<%= post._id%>/like" class="likeBtn"><i class="far fa-heart fa-2x"></i></a>
                     <%  } %>
+                    <a href="/post/<%= post._id%>/comments"><i class="far fa-comment-alt fa-2x"></i></a>
+                    <div class="row">
+                            <div class="col">
+                                    <p class="count"><span class="likeCount"><%= post.likes.length %></span> likes &ensp;
+                                    <span><%= post.comments.length %></span> comments 
+                            </div>
+                            <div class="col">
+                                    <p class="float-right time"><%=moment(post.createdAt).fromNow()%></p>
+                            </div>
+                    </div>
                 </div>   
             </div>
             <br>

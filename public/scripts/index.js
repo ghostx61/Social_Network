@@ -29,13 +29,14 @@ $(document).ready(function(){
             console.log(like);
             var status=$(likeB).children( 'i' ).hasClass('far');  //unlike
             var icon = $(likeB).children( 'i' );
-            var l_count=parseInt($(likeB).parent().children('p.count').children('span').text());
+            var likeTag=$(likeB).parent().find('span.likeCount');
+            var l_count=parseInt(likeTag.text());
             if(status){
                $(icon).removeClass("far");
                 $(icon).addClass("fas");
                 $(likeB).attr("href", unlike);
                 l_count++;
-                $(likeB).parent().children('p.count').children('span').text(l_count);
+                likeTag.text(l_count);
                 console.log("likebtn");
             }
             else{
@@ -43,7 +44,7 @@ $(document).ready(function(){
                 $(icon).addClass("far");
                 $(likeB).attr("href", like);
                 l_count--;
-                $(likeB).parent().children('p.count').children('span').text(l_count);
+                likeTag.text(l_count);
                 console.log("unlikebtn");
             }
         });

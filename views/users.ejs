@@ -2,9 +2,15 @@
 
     <div class="container find-container">
         <h1>Users</h1>
-        <form action="/findFriends" method="GET" class="form-inline my-2 my-lg-0">
-            <input class="form-control mr-sm-2" type="search" name="search" placeholder="Search...." aria-label="Search">
-            <button class="btn btn-outline-info my-2 my-sm-0" type="submit">Search</button>
+        <form action="/findFriends" method="GET">
+            <div class="row">
+                <div class="col-10">
+                    <input class="form-control" type="search" name="search" placeholder="Search...." aria-label="Search">
+                </div>
+                <div class="col-2">
+                    <button class="btn btn-outline-info" type="submit">Search</button>
+                </div>
+            </div>
         </form>
         <%if(result===1){ %>
             <h3 class="mt-5">No user match that search. Please try again.</h3>
