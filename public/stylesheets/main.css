@@ -113,3 +113,7 @@ textarea {
     text-transform: uppercase;
     font-size: smaller;
 }
+.deleteFont{
+    font-weight: 700;
+    color: #f93b3b;
+}

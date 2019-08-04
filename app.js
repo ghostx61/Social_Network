@@ -478,6 +478,18 @@ app.delete("/profile/:username", profileOwnership, async function(req, res){
     }
 });
 
+app.delete("/post/:postId", async function(req, res){
+    try{
+        var post= await Post.findByIdAndDelete(req.params.postId);
+        await Comment.deleteMany({_id: { $in: post.comments}});
+        if(post.image!='')
+            await cloudinary.v2.uploader.destroy(post.imageId);
+        res.redirect("back");    
+    }catch(err){
+        console.log(err);
+    } 
+});
+
 
 app.listen(3000, function(){
     console.log("Server running on port 3000");
