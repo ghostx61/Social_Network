@@ -238,6 +238,7 @@ app.post("/post/image", isLoggedIn, upload.single('image'), function(req, res){
             Post.create({
                 text: req.body.text,
                 image: result.secure_url,
+                imageId: result.public_id,
                 author: author
             }, function(err, post){
                 currentUser.posts.push(post);
@@ -416,7 +417,7 @@ app.put("/profile/:username", upload.single('image'), function(req, res){
                         newUser.image = result.secure_url;
                         newUser.imageId = result.public_id;
                     }
-                    catch{
+                    catch(err){
                         return console.log(err);
                     }
                 }
@@ -431,6 +432,50 @@ app.put("/profile/:username", upload.single('image'), function(req, res){
                 res.redirect("/profile/"+req.params.username);
             }
     });
+});
+
+//account delete 
+app.delete("/profile/:username", profileOwnership, async function(req, res){
+    try{
+        var user= await User.findOne({username: req.params.username}).populate('posts');
+        var posts_id=[] ,comments_id=[],image_id=[];
+        for(let post of user.posts){
+            posts_id.push(post._id);
+            comments_id= comments_id.concat(post.comments);
+            //image ids for cloudinary delete
+            if(post.image!='')
+                image_id.push(post.imageId);
+        }
+        //add user profile image as well 
+        image_id.push(user.imageId);
+        //delete images from cloudinary
+        await cloudinary.v2.api.delete_resources(image_id);
+
+        var followingUsers= await User.find({_id:{$in: user.follow}});        
+        for(let u of followingUsers){
+            var index=u.followers.indexOf(user._id.toString());
+            u.followers.splice(index,1);
+            await u.save();
+        }
+        
+        var followerUsers= await User.find({_id:{$in: user.followers}});      
+        for(let u of followerUsers){
+            var index=u.follow.indexOf(user._id.toString());
+            u.follow.splice(index,1);
+            await u.save();
+        }
+        
+        Promise.all([
+            User.deleteOne({username: user.username}),
+            Post.deleteMany({_id: { $in: posts_id}}),
+            Comment.deleteMany({_id: { $in: comments_id}})
+        ]).then(function(){
+            res.redirect("back");
+        });
+        
+    }catch(err){
+        return console.log(err);
+    }
 });
 
 
