@@ -1,10 +1,37 @@
-<h1>Login</h1>
-<form action="/login" method="POST">
-    <input type="text" name="username" placeholder="username">
-    <input type="password" name="password" placeholder="password">
-    <input type="submit" value="login">
-</form>
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">  
 
-<li><a href="/signup">Signup</li>
-<li><a href="/login">Login</li>
-<li><a href="/logout">Logout</li>
+        <title>Social Network</title>  
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">  
+        <link rel="stylesheet" type="text/css" href="/stylesheets/main.css"> 
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+        <link href="https://fonts.googleapis.com/css?family=Satisfy|Pacifico|Slabo+27px|Roboto&display=swap" rel="stylesheet">   
+
+    </head>  
+    <body>
+        <div class="container">
+            <div class="card text-center mx-auto" style="width: 25rem;">
+                <div class="card-body">
+                    <h2 class="card-title formHead">Social Network</h2>
+                    <form action="/signup" method="POST">
+                        <div class="form-group">
+                            <input type="text" name="username" placeholder="username" class="form-control formTextBox">
+                        </div>
+                        <div class="form-group">
+                            <input type="password" name="password" placeholder="password"class="form-control formTextBox">
+                        </div>
+                        <button class="btn btn-primary btn-block btn-sm">Log in</button>
+                    </form>
+                </div>
+            </div>
+            <div class="card text-center mx-auto mt-3" style="width: 25rem;">
+                <div class="card-body">
+                    <p class="card-text">Don't have an account? <a href="/signup">Sign in</a></p>
+                </div>
+            </div>
+        </div>   
+    </body>
+</html>

@@ -117,3 +117,14 @@ textarea {
     font-weight: 700;
     color: #f93b3b;
 }
+
+.formHead{
+    font-family: 'Satisfy', cursive;
+}
+.formTextBox{
+    background-color: #f7f7f7;
+}
+
+.form-control-file{
+    display:inline-block;
+}

@@ -119,9 +119,6 @@ app.get("/login", function(req, res){
     res.render("login");
 });
 
-app.get("/secret", isLoggedIn, function(req, res){
-    res.render("secret");
-});
 
 //user signup
 app.post("/signup", function(req, res){
@@ -134,7 +131,7 @@ app.post("/signup", function(req, res){
     User.register(user, req.body.password, function(err, user){
         if(err){
             console.log(err);
-            return res.redirect("/signup");
+            return res.redirect("/signup", {error: err});
         }
         passport.authenticate("local")(req, res, function(){
          console.log(req.user.username);   
@@ -154,7 +151,7 @@ app.post("/login", passport.authenticate("local", {
 //user logout
 app.get("/logout", function(req, res){
     req.logout();
-    res.redirect("/secret");
+    res.redirect("/login");
 });
 
 //user posts
