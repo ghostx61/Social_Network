@@ -13,10 +13,16 @@
     </head>  
     <body>
         <div class="container">
+              <!--flash message-->
+            <% if(message && message.length > 0){ %>
+                <div class="alert alert-danger" role="alert">
+                    <%= message%>
+                </div>
+            <% } %>
             <div class="card text-center mx-auto" style="width: 25rem;">
                 <div class="card-body">
                     <h2 class="card-title formHead">Social Network</h2>
-                    <form action="/signup" method="POST">
+                    <form action="/login" method="POST">
                         <div class="form-group">
                             <input type="text" name="username" placeholder="username" class="form-control formTextBox">
                         </div>

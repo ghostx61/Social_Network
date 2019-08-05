@@ -5,6 +5,7 @@ var passport =require("passport");
 var localStrategy = require("passport-local");
 var passportLocalMongoose = require("passport-local-mongoose");
 var methodOverride =require("method-override");
+var flash =require("connect-flash");
 
 var Comment=require("./models/comment");
 var Post = require("./models/post");
@@ -17,6 +18,7 @@ app.use(methodOverride("_method"));
 app.locals.moment = require('moment');
 
 app.set("view engine", "ejs");
+app.use(flash());
 
 //for jquery
 var jsdom = require("jsdom");
@@ -67,6 +69,11 @@ app.use(passport.session());
 passport.use(new localStrategy(User.authenticate()));
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
+
+app.use(function(req, res, next){
+    res.locals.message= req.flash("error");
+    next();
+})
 
 
 //======
@@ -131,10 +138,10 @@ app.post("/signup", function(req, res){
     User.register(user, req.body.password, function(err, user){
         if(err){
             console.log(err);
-            return res.redirect("/signup", {error: err});
+            req.flash("error", err.message);
+            return res.redirect("/signup");
         }
-        passport.authenticate("local")(req, res, function(){
-         console.log(req.user.username);   
+        passport.authenticate("local")(req, res, function(){  
         res.redirect("/profile/"+req.user.username);
         });
     });
@@ -143,7 +150,8 @@ app.post("/signup", function(req, res){
 //user login
 app.post("/login", passport.authenticate("local", {
     successRedirect: "/",
-    failureRedirect: "/login"
+    failureRedirect: "/login",
+    failureFlash: true
 }), function(req, res){
 
 });
@@ -160,6 +168,8 @@ app.get("/profile/:username", isLoggedIn, function(req, res){
         function(err, foundUser){
             if(err && foundUser){
                 console.log(err);
+                req.flash("error", err.message);
+                res.redirect("back");
             }else{
                 // follow status
                 var status=false;
@@ -203,7 +213,6 @@ app.post("/post", function(req, res){
         id: req.user._id,
         username: req.user.username
     }
-    console.log(req.body);
     Post.create({
         text: req.body.text,
         image: req.body.image,
@@ -213,8 +222,9 @@ app.post("/post", function(req, res){
         currentUser.save(function(err, data){
             if(err){
                 console.log(err);
+                req.flash("error", err.message);
+                res.redirect("back");
             }else{
-                console.log("post");
                 res.redirect("/profile/"+req.user.username+"?page=1");
             }
         })
@@ -227,10 +237,11 @@ app.post("/post/image", isLoggedIn, upload.single('image'), function(req, res){
         id: req.user._id,
         username: req.user.username
     }
-    console.log(req.body);
     cloudinary.v2.uploader.upload(req.file.path, function(err, result) {
         if(err){
-            console.log(err)
+            console.log(err);
+            req.flash("error", err.message);
+            res.redirect("back");
         }else{
             Post.create({
                 text: req.body.text,
@@ -242,8 +253,9 @@ app.post("/post/image", isLoggedIn, upload.single('image'), function(req, res){
                 currentUser.save(function(err, data){
                     if(err){
                         console.log(err);
+                        req.flash("error", err.message);
+                        res.redirect("back");
                     }else{
-                        console.log("image");
                         res.redirect("back");
                     }
                 });
@@ -262,6 +274,8 @@ app.get("/findFriends", isLoggedIn, function(req, res){
             function(err, allusers){
             if(err){
                 console.log(err);
+                req.flash("error", err.message);
+                res.redirect("back");
             }else{
                 if(allusers.length < 1){
                     result=1;
@@ -280,7 +294,9 @@ app.get("/findFriends", isLoggedIn, function(req, res){
 app.post("/follow/:id", function(req, res){
     User.findById(req.params.id, function(err, followingUser){
         if(err){
-            return console.log(err);
+            console.log(err);
+            req.flash("error", err.message);
+            return res.redirect("back");
         }
         // following user's ID in follower user
         followingUser.followers.push(mongoose.Types.ObjectId(req.user._id));
@@ -290,6 +306,8 @@ app.post("/follow/:id", function(req, res){
         req.user.save(function(err){
             if(err){
                 console.log(err);
+                req.flash("error", err.message);
+                res.redirect("back");
             }else{
                 res.redirect("back");
             }
@@ -308,6 +326,8 @@ app.post("/unfollow/:id", function(req, res){
         req.user.save(function(err){
             if(err){
                 console.log(err);
+                req.flash("error", err.message);
+                res.redirect("back");
             }else{
                 res.redirect("back");
             }
@@ -326,6 +346,8 @@ app.get("/post/:postId/like", function(req, res){
             foundPost.save(function(err, post){
                 if(err){
                     console.log(err);
+                    req.flash("error", err.message);
+                    res.redirect("back");
                 }else{
                     res.send({postID: post._id});
                 }
@@ -335,18 +357,20 @@ app.get("/post/:postId/like", function(req, res){
 });
 
 app.get("/post/:postId/unlike", function(req, res){
-    console.log("unlike route");
     Post.findById(req.params.postId, function(err,foundPost){
         if(err){
             console.log(err);
+            req.flash("error", err.message);
+            res.redirect("back");
         }else{
             var index = foundPost.likes.indexOf(req.user._id);
             foundPost.likes.splice(index,1);
             foundPost.save(function(err){
                 if(err){
                     console.log(err);
+                    req.flash("error", err.message);
+                    res.redirect("back");
                 }else{
-                    console.log("postid", foundPost._id);
                     res.send({postID: foundPost._id});
                 }
             });  
@@ -358,6 +382,8 @@ app.get("/post/:postId/comments", isLoggedIn, function(req, res){
     Post.findById(req.params.postId).populate('comments').exec(function(err, newPost){
         if(err){
             console.log(err);
+            req.flash("error", err.message);
+            res.redirect("back");
         }else{
             User.findById(newPost.author.id, function(err, user){
                 var pic = user.image;
@@ -371,17 +397,20 @@ app.post("/post/:postId/comment", function(req, res){
     Post.findById(req.params.postId, function(err, post){
         if(err){
             console.log(err);
+            req.flash("error", err.message);
+            res.redirect("back");
         }else{
             Comment.create(req.body.comment, function(err, comment){
                 if(err){
                     console.log(err);
+                    req.flash("error", err.message);
+                res.redirect("back");
                 }else{
                     comment.author.id = req.user._id;
                     comment.author.username = req.user.username;
                     comment.save();
                     post.comments.push(comment);
                     post.save();
-                    console.log(post);
                     res.redirect("/post/"+post._id+"/comments"); 
                 }
             });  
@@ -394,6 +423,8 @@ app.get("/profile/:username/edit", profileOwnership, function(req, res){
     User.findOne({username: req.params.username}, function(err, user){
         if(err){
             console.log(err);
+            req.flash("error", err.message);
+            res.redirect("back");
         }else{
             res.render("profileEdit", {user: user, User: req.user});
         }
@@ -404,6 +435,8 @@ app.put("/profile/:username", upload.single('image'), function(req, res){
     User.findOne({username: req.params.username}, async function(err, newUser){
             if(err){
                 console.log(err);
+                req.flash("error", err.message);
+                res.redirect("back");
             }else{
                 if(req.file){
                     try{
@@ -415,7 +448,9 @@ app.put("/profile/:username", upload.single('image'), function(req, res){
                         newUser.imageId = result.public_id;
                     }
                     catch(err){
-                        return console.log(err);
+                        console.log(err);
+                        req.flash("error", err.message);
+                        return res.redirect("back");
                     }
                 }
                 newUser.fname = req.body.fname;
@@ -425,7 +460,6 @@ app.put("/profile/:username", upload.single('image'), function(req, res){
                 newUser.address = req.body.address;
                 newUser.dob = req.body.dob;
                 newUser.save();
-                console.log(newUser);
                 res.redirect("/profile/"+req.params.username);
             }
     });
@@ -467,11 +501,13 @@ app.delete("/profile/:username", profileOwnership, async function(req, res){
             Post.deleteMany({_id: { $in: posts_id}}),
             Comment.deleteMany({_id: { $in: comments_id}})
         ]).then(function(){
-            res.redirect("back");
+            res.redirect("/login");
         });
         
     }catch(err){
-        return console.log(err);
+        console.log(err);
+        req.flash("error", err.message);
+        return res.redirect("back");
     }
 });
 
@@ -484,6 +520,8 @@ app.delete("/post/:postId", async function(req, res){
         res.redirect("back");    
     }catch(err){
         console.log(err);
+        req.flash("error", err.message);
+        res.redirect("back");
     } 
 });
 
@@ -497,6 +535,7 @@ function isLoggedIn(req, res, next){
     if(req.isAuthenticated()){
         return next();
     }
+    req.flash("error", "You need to be logged in");
     res.redirect("/login");
 }
 
@@ -505,6 +544,7 @@ function profileOwnership(req, res, next){
         if(req.user.username === req.params.username)
         return next();
     }
+    req.flash("error", "Something went wrong");
     res.redirect("back");
 }
 
