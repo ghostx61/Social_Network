@@ -5,8 +5,6 @@ $(document).ready(function(){
     });
 
     $('#image').change(function(){
-        $('#postForm').attr("action", "/post/image");
-        $('#postForm').attr("enctype", "multipart/form-data");
         $('textarea').attr("placeholder", "Write something about the image ...");
     });
 

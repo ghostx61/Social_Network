@@ -207,62 +207,33 @@ app.get("/profile/:username", isLoggedIn, function(req, res){
 
 
 //add new post (post route)
-app.post("/post", function(req, res){
+app.post("/post", isLoggedIn, upload.single('image'), async function(req, res){
     var currentUser =req.user;
     var author = {
         id: req.user._id,
         username: req.user.username
     }
-    Post.create({
+    var newPost= {
         text: req.body.text,
-        image: req.body.image,
+        image: "",
         author: author
-    }, function(err, post){
-        currentUser.posts.push(post);
-        currentUser.save(function(err, data){
-            if(err){
-                console.log(err);
-                req.flash("error", err.message);
-                res.redirect("back");
-            }else{
-                res.redirect("/profile/"+req.user.username+"?page=1");
-            }
-        })
-    })
-});
-
-app.post("/post/image", isLoggedIn, upload.single('image'), function(req, res){
-    var currentUser =req.user;
-    var author = {
-        id: req.user._id,
-        username: req.user.username
     }
-    cloudinary.v2.uploader.upload(req.file.path, function(err, result) {
-        if(err){
-            console.log(err);
-            req.flash("error", err.message);
-            res.redirect("back");
-        }else{
-            Post.create({
-                text: req.body.text,
-                image: result.secure_url,
-                imageId: result.public_id,
-                author: author
-            }, function(err, post){
-                currentUser.posts.push(post);
-                currentUser.save(function(err, data){
-                    if(err){
-                        console.log(err);
-                        req.flash("error", err.message);
-                        res.redirect("back");
-                    }else{
-                        res.redirect("back");
-                    }
-                });
-            });
+    try{
+        //add image if image file uploaded
+        if(req.file){
+            var result= await cloudinary.v2.uploader.upload(req.file.path);
+            newPost.image= result.secure_url;
+            newPost.imageId= result.public_id
         }
-        
-    });
+        var post= await Post.create(newPost);
+        currentUser.posts.push(post);
+        await currentUser.save();
+        res.redirect("back");
+    }catch(err){
+        console.log(err);
+        req.flash("error", err.message);
+        res.redirect("back");
+    }
 });
 
 app.get("/findFriends", isLoggedIn, function(req, res){
