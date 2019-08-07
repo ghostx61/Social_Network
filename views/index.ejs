@@ -1,7 +1,9 @@
 <% include partials/header %>
 
     <div class="container" id="homePageContainer">
-    
+        <% if(User.follow.length < 1){ %>
+            <h1 class="formHead py-5">"Follow users to see their posts"</h1>      
+        <% } %>
         <%for(let post of posts){ %>
             <div class="card">
                 <div class="card-body pb-0">

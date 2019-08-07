@@ -205,7 +205,6 @@ app.get("/profile/:username", isLoggedIn, function(req, res){
     );
 });
 
-
 //add new post (post route)
 app.post("/post", isLoggedIn, upload.single('image'), async function(req, res){
     var currentUser =req.user;
@@ -241,8 +240,14 @@ app.get("/findFriends", isLoggedIn, function(req, res){
     if(req.query.search){
         //search
         const regex = new RegExp(escapeRegex(req.query.search), 'gi');
-        User.find({$or: [{fname: regex,}, {lname: regex}, {username:regex}]}, 
-            function(err, allusers){
+        User.find({
+            $and: [
+                 { _id: {$ne: req.user._id} },
+                 { $or: [
+                       {fname: regex,}, {lname: regex}, {username:regex}
+                 ]},
+             ]
+     }, function(err, allusers){
             if(err){
                 console.log(err);
                 req.flash("error", err.message);
