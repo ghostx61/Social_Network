@@ -43,7 +43,8 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET
 });
 
-mongoose.connect("mongodb://localhost:27017/mongoDemo_v7");
+//DATABASEURL variable for mongoAtlas
+mongoose.connect(process.env.DATABASE_URL || "mongodb://localhost:27017/mongoDemo_v7");
 
 
 //passport config
@@ -70,7 +71,8 @@ app.use(postRoutes);
 app.use(indexRoutes);
 app.use(commentRoutes);
 
-app.listen(3000, function(){
+//IP variable for heroku deploy
+app.listen(process.env.IP || 3000, function(){
     console.log("Server running on port 3000");
 });
 
