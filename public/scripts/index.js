@@ -1,7 +1,7 @@
 $(document).ready(function(){
     
     $('#image').change(function(){
-        $('textarea').attr("placeholder", "Write something about the image ...");
+        $('.postTextArea').attr("placeholder", "Write something about the image ...");
     });
 
     // $('#postbtn').onclick(function(){
