@@ -6,13 +6,13 @@
         <div class="card">
                 <div class="card-body">
                         <div class="row">
-                                <div class="col-3">
+                                <div class="col-sm-3">
                                         <img src="<%= user.image %>" 
                                         alt="... " 
                                         onerror=this.src='https://www.searchpng.com/wp-content/uploads/2019/02/Deafult-Profile-Pitcher.png'
                                         class="img-thumbnail img-fluid profilePic">
                                 </div>
-                                <div class="col-9">
+                                <div class="col-sm-9">
                                         <% if(!(user._id.equals(userId))){ %>
                                                 <%if(following){ %>
                                                         <form action="/unfollow/<%=user._id%>" method="POST">
@@ -55,7 +55,7 @@
                         </div> 
                 </div>
         </div>
-        <div class="container" id="homePageContainer">
+        <div class="mx-auto" id="homePageContainer">
                 <% if(user._id.equals(userId)){ %>
                         <div class="card mt-2">
                                 <div class="card-header">
@@ -87,7 +87,7 @@
                 <br>
                 <% for(let i=0; i<=user.posts.length-1; i++){ %>
                         <div class="card">
-                        <div class="card-body pb-0">
+                        <div class="card-body pb-0 pl-2">
                                 <% if(user._id.equals(userId)){ %>
                                         <div class="dropdown">
                                                 <i class="fas fa-angle-down fa-2x float-right text-muted " href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></i>
@@ -123,18 +123,18 @@
                                 </div>
                                 <% } %>
 
-                                <h5>
+                                <h6 class="mb-0">
                                         <a  class="card-title link" 
                                         href="/profile/<%=user.posts[i].author.username%>"><img src="<%= user.image %>" class="img-thumbnail rounded-circle postImg" 
                                         onerror=this.src='https://www.searchpng.com/wp-content/uploads/2019/02/Deafult-Profile-Pitcher.png'> <%=user.posts[i].author.username %></a> 
-                                </h5>
+                                </h6>
                                 <p class="card-text"><%= user.posts[i].text %></p>
                                 
                         </div>
                         <%if(user.posts[i].image!==""){ %>
                                 <img src="<%= user.posts[i].image %>" class="card-img-top" alt="...">
                         <%} %>
-                        <div class="card-body pb-0">
+                        <div class="card-body pb-0 px-2">
                                 <% var status=false;   %>
                                 <% for(let l of user.posts[i].likes){   %>
                                 <%  if(l==userId){  %>
@@ -149,12 +149,12 @@
                                 <%  } %>
                                 <a href="/post/<%= user.posts[i]._id%>/comments"><i class="far fa-comment-alt fa-2x"></i></a>
                                 <div class="row">
-                                        <div class="col">
-                                                <p class="count"><span class="likeCount"><%= user.posts[i].likes.length %></span> likes &ensp;
+                                        <div class="col-7 pr-0">
+                                                <p class="count"><span class="likeCount"><%= user.posts[i].likes.length %></span> likes 
                                                 <span><%= user.posts[i].comments.length %></span> comments      
                                                 </p>
                                         </div>
-                                        <div class="col">
+                                        <div class="col-5 pl-1">
                                                 <p class="float-right time"><%=moment(user.posts[i].createdAt).fromNow()%></p>
                                         </div>
                                 </div>

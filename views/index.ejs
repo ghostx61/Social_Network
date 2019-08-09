@@ -6,18 +6,18 @@
         <% } %>
         <%for(let post of posts){ %>
             <div class="card">
-                <div class="card-body pb-0">
-                    <h5 class="card-title">
+                <div class="card-body pb-0 pl-2">
+                    <h6 class="card-title mb-0">
                         <a href="/profile/<%=post.author.username%>" class="link"><img src="<%= post.profilePic %>" class="img-thumbnail rounded-circle postImg" 
                         onerror=this.src='https://www.searchpng.com/wp-content/uploads/2019/02/Deafult-Profile-Pitcher.png'> <%=post.author.username %></a> 
-                    </h5>
+                    </h6>
                     <p class="card-text"><%= post.text %></p>
                     
                 </div>
                 <%if(post.image!==""){ %>
                     <img src="<%= post.image %>" class="card-img-top" alt="...">
                 <%} %>
-                <div class="card-body pb-0">
+                <div class="card-body pb-0 px-2">
                     <% var status=false;   %>
                     <% for(let l of post.likes){   %>
                         <%  if(l==userId){  %>
@@ -32,11 +32,11 @@
                     <%  } %>
                     <a href="/post/<%= post._id%>/comments"><i class="far fa-comment-alt fa-2x"></i></a>
                     <div class="row">
-                            <div class="col">
-                                    <p class="count"><span class="likeCount"><%= post.likes.length %></span> likes &ensp;
+                            <div class="col-7 pr-0">
+                                    <p class="count"><span class="likeCount"><%= post.likes.length %></span> likes 
                                     <span><%= post.comments.length %></span> comments 
                             </div>
-                            <div class="col">
+                            <div class="col-5 pl-1">
                                     <p class="float-right time"><%=moment(post.createdAt).fromNow()%></p>
                             </div>
                     </div>

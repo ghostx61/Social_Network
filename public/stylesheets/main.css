@@ -101,7 +101,7 @@ textarea {
 }
 
 .count{
-    font-weight: 600;
+    font-weight: 500;
 }
 .followNo{
     font-family: 'Roboto', serif;
@@ -111,7 +111,9 @@ textarea {
 }
 .time{
     text-transform: uppercase;
-    font-size: smaller;
+    font-size: x-small;
+    padding-top: 5px;
+    color: #999;
 }
 .deleteFont{
     font-weight: 700;
@@ -128,3 +130,19 @@ textarea {
 .form-control-file{
     display:inline-block;
 }
+
+@media (max-width: 768px) {
+    #showPostImg{
+        display:none;
+    }
+    .postImg{
+        width:47px;
+        height:47px;
+    }
+ }
+
+ @media (max-width: 575.98px) {
+    .profilePic{
+        width: 100%;
+    }
+ }

@@ -4,10 +4,10 @@
         <h1>Users</h1>
         <form action="/findFriends" method="GET">
             <div class="row">
-                <div class="col-10">
+                <div class="col-9 pr-1">
                     <input class="form-control" type="search" name="search" placeholder="Search...." aria-label="Search">
                 </div>
-                <div class="col-2">
+                <div class="col-3 pl-1">
                     <button class="btn btn-outline-info" type="submit">Search</button>
                 </div>
             </div>
@@ -22,7 +22,7 @@
            
                 <div class="card mt-3">
                     <div class="card-body">
-                        <!-- post button -->
+                        <!-- follow button -->
                         <%for(let user_id of User.follow){  %>
                         
                             <%var follow = false; %>
@@ -31,28 +31,31 @@
                             <%break;%>
                             <%} %>
                         <%} %>
-                        <%if(follow){ %>
-                            <form action="/unfollow/<%=user._id%>" method="POST" 
-                                class="inline float-right">
-                                <button class="btn btn-primary">Following</button>
-                            </form>
-                            
-                        <%}else{%>
-                            <form action="/follow/<%=user._id%>" method="POST"
-                                class="inline float-right">
-                                <button class="followBtn btn btn-outline-primary">Follow</button>
-                            </form>
-                        <%}%>
+                       
                         <div class="row">
                             <div class="col-2 px-0"><img src="<%=user.image%>" 
                                 class="img-thumbnail rounded-circle findImg" 
                                 onerror=this.src='https://www.searchpng.com/wp-content/uploads/2019/02/Deafult-Profile-Pitcher.png'>
                             </div>
-                            <div class="col-10 px-0">
+                            <div class="col-7 px-0">
                                 <a href="/profile/<%=user.username%>" class="link">   
                                     <h5 class="card-title"><%= user.fname %> <%= user.lname %> </h5>
+                                    <h6 class="card-subtitle mb-2 text-muted">@<%=user.username%></h6>
                                 </a> 
-                                <h6 class="card-subtitle mb-2 text-muted">@<%=user.username%></h6>
+                            </div>
+                            <div class="col-3 pl-0 pr-2">
+                                <%if(follow){ %>
+                                    <form action="/unfollow/<%=user._id%>" method="POST" 
+                                        class="inline float-right">
+                                        <button class="btn btn-primary ">Following</button>
+                                    </form>
+                                    
+                                <%}else{%>
+                                    <form action="/follow/<%=user._id%>" method="POST"
+                                        class="inline float-right">
+                                        <button class="followBtn btn btn-outline-primary">Follow</button>
+                                    </form>
+                                <%}%>
                             </div>
                         </div>
                         

@@ -1,9 +1,5 @@
 $(document).ready(function(){
-    $('.cc').click(function(event){
-        event.preventDefault();
-        console.log($( this ).children( 'i' ).hasClass('fa-comment-alt'));
-    });
-
+    
     $('#image').change(function(){
         $('textarea').attr("placeholder", "Write something about the image ...");
     });
