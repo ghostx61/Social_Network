@@ -72,7 +72,7 @@ app.use(postRoutes);
 app.use(indexRoutes);
 app.use(commentRoutes);
 
-//IP variable for heroku deploy
+//PORT variable for heroku deploy
 app.listen(process.env.PORT || 3000, function(){
     console.log("Server running on port 3000");
 });
